@@ -1,7 +1,5 @@
-using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using TerrarianWeaponry.Items;
@@ -12,7 +10,6 @@ namespace TerrarianWeaponry
 	{
 		public override void Load()
 		{
-			//var texture = Main.itemTexture[item.type];
 			Texture2D stickTexture = GetTexture("Materials/Stick");
 			Point stickOrig = new Point(21, 10);
 			Texture2D headTexture = GetTexture("Materials/Head");
@@ -24,7 +21,7 @@ namespace TerrarianWeaponry
 			Texture2D b = Utilities.MixTexture2D(stickTexture, stickOrig, anotherHeadTexture, anohterHeadOrig);
 
 			//  10.000 items =  3 seconds
-			// 100.000 items = 30 seconds
+			// 100.000 items = 30 seconds - 150 MB of RAM
 			//for (int i = 0; i < 10000; i++)
 			//{
 			//	var _ = Utilities.MixTexture2D(stickTexture, stickOrig, headTexture, headOrig);
