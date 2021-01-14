@@ -128,8 +128,8 @@ namespace TerrarianWeaponry
 		public static Texture2D MixTexture2D(Texture2D originalTexture, Point originalPoint, Texture2D mergeTexture, Point mergePoint)
 		{
 			Point maxSize = GetMaxSize(originalPoint, originalTexture, mergePoint, mergeTexture);
-			int xSize = (int)maxSize.X;
-			int ySize = (int)maxSize.Y;
+			int xSize = maxSize.X;
+			int ySize = maxSize.Y;
 
 			originalTexture = originalTexture.ResizeTexture2D(xSize, ySize, Main.instance.GraphicsDevice);
 			Color[,] colorOriginal = originalTexture.ToColor().To2DColor(originalTexture.Width, originalTexture.Height);
