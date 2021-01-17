@@ -1,0 +1,35 @@
+﻿{
+	"Tools": [
+		{
+			"ToolName": "",
+			"Parts": [ "Rod", "PickHead" ]
+		}
+	],
+	"Parts": [
+		{
+			"PartName": "Rod",
+			"ValidMaterials": [ "Stone", "Wood" ]
+		}
+	],
+	"Materials": [
+		{
+			"MaterialName": "Stone",
+			"Damage": 1,
+			"Knockback": 0.1,
+			"Mana": 0,
+			"Pick": 1,
+			"Axe": 1,
+			"Hammer": 1,
+			"TileBoost": 1,
+			"UseAnimation": 1,
+			"UseTime": 1,
+			"Scale": 1,
+			"UseStyle": 1,
+			"UseTurn": false,
+			"AutoReuse": false,
+			"Rare": 1,
+			"Modifier": 1.5,
+			"TexturePath": "Path/To/Texture"
+		}
+	]
+}
