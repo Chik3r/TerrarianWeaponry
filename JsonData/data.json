@@ -1,35 +1,104 @@
-﻿{
+{
 	"Tools": [
 		{
-			"ToolName": "",
-			"Parts": [ "Rod", "PickHead" ]
+			"ToolName": "Pick",
+			"Parts": [ "Handle", "PickHead" ]
 		}
 	],
 	"Parts": [
 		{
-			"PartName": "Rod",
-			"ValidMaterials": [ "Stone", "Wood" ]
+			"PartName": "Handle",
+			"ValidMaterials": [ "Wood", "StoneStick" ]
+		},
+		{
+			"PartName": "PickHead",
+			"ValidMaterials": [ "Hue", "Iron" ]
 		}
 	],
 	"Materials": [
 		{
-			"MaterialName": "Stone",
-			"Damage": 1,
-			"Knockback": 0.1,
+			"MaterialName": "Wood",
+			"Damage": 0,
+			"Knockback": 0,
 			"Mana": 0,
-			"Pick": 1,
-			"Axe": 1,
-			"Hammer": 1,
-			"TileBoost": 1,
-			"UseAnimation": 1,
-			"UseTime": 1,
+			"Pick": 0,
+			"Axe": 0,
+			"Hammer": 0,
+			"TileBoost": 0,
+			"UseAnimation": 0,
+			"UseTime": 0,
+			"Scale": 0,
+			"UseStyle": 0,
+			"UseTurn": false,
+			"AutoReuse": false,
+			"Rare": 0,
+			"Modifier": 1.5,
+			"TexturePath": "Materials/Handles/WoodenStick",
+			"OriginX": 21,
+			"OriginY": 10
+		},
+		{
+			"MaterialName": "StoneStick",
+			"Damage": 0,
+			"Knockback": 0,
+			"Mana": 0,
+			"Pick": 0,
+			"Axe": 0,
+			"Hammer": 0,
+			"TileBoost": 0,
+			"UseAnimation": 0,
+			"UseTime": 0,
+			"Scale": 0,
+			"UseStyle": 0,
+			"UseTurn": false,
+			"AutoReuse": false,
+			"Rare": 0,
+			"Modifier": 2,
+			"TexturePath": "Materials/Handles/StoneStick",
+			"OriginX": 21,
+			"OriginY": 10
+		},
+		{
+			"MaterialName": "Hue",
+			"Damage": 25,
+			"Knockback": 1,
+			"Mana": 0,
+			"Pick": 35,
+			"Axe": 0,
+			"Hammer": 0,
+			"TileBoost": 0,
+			"UseAnimation": 20,
+			"UseTime": 20,
 			"Scale": 1,
 			"UseStyle": 1,
 			"UseTurn": false,
 			"AutoReuse": false,
-			"Rare": 1,
-			"Modifier": 1.5,
-			"TexturePath": "Path/To/Texture"
+			"Rare": 3,
+			"Modifier": 0,
+			"TexturePath": "Materials/Heads/AnotherHead",
+			"OriginX": 9,
+			"OriginY": 10
+		},
+		{
+			"MaterialName": "Iron",
+			"Damage": 10,
+			"Knockback": 3,
+			"Mana": 0,
+			"Pick": 40,
+			"Axe": 0,
+			"Hammer": 0,
+			"TileBoost": 0,
+			"UseAnimation": 20,
+			"UseTime": 20,
+			"Scale": 1,
+			"UseStyle": 1,
+			"UseTurn": true,
+			"AutoReuse": true,
+			"Rare": 2,
+			"Modifier": 0,
+			"TexturePath": "Materials/Heads/Head",
+			"OriginX": 9,
+			"OriginY": 10
 		}
 	]
 }

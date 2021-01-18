@@ -11,8 +11,8 @@ namespace TerrarianWeaponry.JsonData
 
 		public List<MaterialData> Materials { get; set; }
 
-		//public static string ToJson(MainData data) => JsonConvert.SerializeObject(data);
+		public static string ToJson(MainData data) => JsonConvert.SerializeObject(data);
 
-		//public static MainData FromJson(string data) => JsonConvert.DeserializeObject<MainData>(data);
+		public static MainData FromJson(string data) => JsonConvert.DeserializeObject<MainData>(data);
 	}
 }

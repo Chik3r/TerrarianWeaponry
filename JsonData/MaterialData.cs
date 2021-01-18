@@ -1,4 +1,7 @@
-﻿namespace TerrarianWeaponry.JsonData
+﻿using Microsoft.Xna.Framework.Graphics;
+using Newtonsoft.Json;
+
+namespace TerrarianWeaponry.JsonData
 {
 	public class MaterialData
 	{
@@ -14,45 +17,53 @@
 		[ModifierType(ModifierTypes.None)]
 		public string TexturePath { get; set; }
 
+		[FieldNameReference("")]
+		[ModifierType(ModifierTypes.None)]
+		public int OriginX { get; set; }
+
+		[FieldNameReference("")]
+		[ModifierType(ModifierTypes.None)]
+		public int OriginY { get; set; }
+
 		[FieldNameReference("damage")]
-		[ModifierType(ModifierTypes.Multiply)]
+		[ModifierType(ModifierTypes.MultiplyInt)]
 		public int Damage { get; set; }
 
 		[FieldNameReference("knockBack")]
-		[ModifierType(ModifierTypes.Multiply)]
+		[ModifierType(ModifierTypes.MultiplyFloat)]
 		public float Knockback { get; set; }
 
 		[FieldNameReference("mana")]
-		[ModifierType(ModifierTypes.Divide)]
+		[ModifierType(ModifierTypes.DivideInt)]
 		public int Mana { get; set; }
 
 		[FieldNameReference("pick")]
-		[ModifierType(ModifierTypes.Multiply)]
+		[ModifierType(ModifierTypes.MultiplyInt)]
 		public int Pick { get; set; }
 
 		[FieldNameReference("axe")]
-		[ModifierType(ModifierTypes.Multiply)]
+		[ModifierType(ModifierTypes.MultiplyInt)]
 		public int Axe { get; set; }
 
 		[FieldNameReference("hammer")]
-		[ModifierType(ModifierTypes.Multiply)]
+		[ModifierType(ModifierTypes.MultiplyInt)]
 		public int Hammer { get; set; }
 
 		[FieldNameReference("tileBoost")]
-		[ModifierType(ModifierTypes.Multiply)]
+		[ModifierType(ModifierTypes.MultiplyInt)]
 		public int TileBoost { get; set; }
 
 		[FieldNameReference("useAnimation")]
-		[ModifierType(ModifierTypes.Divide)]
+		[ModifierType(ModifierTypes.DivideInt)]
 		public int UseAnimation { get; set; }
 
 		[FieldNameReference("useTime")]
-		[ModifierType(ModifierTypes.Divide)]
+		[ModifierType(ModifierTypes.DivideInt)]
 		public int UseTime { get; set; }
 
 		[FieldNameReference("scale")]
 		[ModifierType(ModifierTypes.None)]
-		public int Scale { get; set; }
+		public float Scale { get; set; }
 
 		[FieldNameReference("useStyle")]
 		[ModifierType(ModifierTypes.None)]

@@ -9,30 +9,21 @@ namespace TerrarianWeaponry.Items
 	public class BasePickaxe : BaseItem
 	{
 		public override string Texture => "TerrarianWeaponry/Items/BasePickaxe";
-		private readonly Texture2D _texture;
 
-		public BasePickaxe() { }
+		//public override void SetStaticDefaults()
+		//{
+		//	if (_texture != null)
+		//	{
+		//		Main.itemTexture[item.type] = _texture;
+		//		_info.width = _texture.Width;
+		//		_info.height = _texture.Height;
+		//	}
+		//}
 
-		public BasePickaxe(ItemInfo info, Texture2D texture = null)
-		{
-			_info = info;
-			_texture = texture;
-		}
-
-		public override void SetStaticDefaults()
-		{
-			if (_texture != null)
-			{
-				Main.itemTexture[item.type] = _texture;
-				_info.width = _texture.Width;
-				_info.height = _texture.Height;
-			}
-		}
-
-		public override void SetDefaults()
-		{
-			SetDefaultsFromInfo();
-		}
+		//public override void SetDefaults()
+		//{
+		//	SetDefaultsFromInfo();
+		//}
 
 		public override bool Autoload(ref string name)
 		{

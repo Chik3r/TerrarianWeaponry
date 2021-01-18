@@ -16,14 +16,24 @@ namespace TerrarianWeaponry.JsonData
 	public enum ModifierTypes
 	{
 		/// <summary>
-		/// The field or property has a better value when higher. An example is: damage
+		/// The field or property has a better value when higher, and it's type is <see cref="float"/>. An example is: knockback
 		/// </summary>
-		Multiply,
+		MultiplyFloat,
 
 		/// <summary>
-		/// The field or property has a better value when lower. An example is: useTime
+		/// The field or property has a better value when higher, and it's type is <see cref="int"/>. An example is: damage
 		/// </summary>
-		Divide,
+		MultiplyInt,
+
+		/// <summary>
+		/// The field or property has a better value when lower, and it's type is <see cref="float"/>.
+		/// </summary>
+		DivideFloat,
+
+		/// <summary>
+		/// The field or property has a better value when lower, and it's type is <see cref="int"/>. An example is: useTime
+		/// </summary>
+		DivideInt,
 
 		/// <summary>
 		/// The field or property is a modifier
