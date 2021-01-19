@@ -1,29 +1,10 @@
-﻿using System.Linq;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Terraria;
-using Terraria.ID;
+﻿using Terraria.ID;
 
 namespace TerrarianWeaponry.Items
 {
 	public class BasePickaxe : BaseItem
 	{
 		public override string Texture => "TerrarianWeaponry/Items/BasePickaxe";
-
-		//public override void SetStaticDefaults()
-		//{
-		//	if (_texture != null)
-		//	{
-		//		Main.itemTexture[item.type] = _texture;
-		//		_info.width = _texture.Width;
-		//		_info.height = _texture.Height;
-		//	}
-		//}
-
-		//public override void SetDefaults()
-		//{
-		//	SetDefaultsFromInfo();
-		//}
 
 		public override bool Autoload(ref string name)
 		{

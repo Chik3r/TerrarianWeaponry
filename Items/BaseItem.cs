@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
-using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace TerrarianWeaponry.Items
@@ -15,11 +14,6 @@ namespace TerrarianWeaponry.Items
 		protected readonly Texture2D _texture;
 
 		public BaseItem() { } // Needed for Autoload to work
-
-		public BaseItem(ItemInfo itemInfo)
-		{
-			_info = itemInfo;
-		}
 
 		public BaseItem(ItemInfo info, Texture2D texture = null)
 		{
@@ -42,42 +36,8 @@ namespace TerrarianWeaponry.Items
 			SetDefaultsFromInfo(); // Load the item values from _info
 		}
 
-		public override bool Autoload(ref string name)
-		{
-			// Create a new ItemInfo with the following values
-			//ItemInfo info = new ItemInfo
-			//{
-			//	width = 40,
-			//	height = 40,
-			//	melee = true,
-			//	useStyle = ItemUseStyleID.SwingThrow,
-			//	useTime = 20,
-			//	useAnimation = 20,
-			//	UseSound = SoundID.Item1,
-			//	autoReuse = true,
-			//	damage = 1,
-			//	knockBack = 0.5f
-			//};
-			//// Register a new item, the "name" parameter must be unique or it will lead to an exception
-			//mod.AddItem("BaseItem", new BaseItem(info)); 
-
-			//info = new ItemInfo
-			//{
-			//	width = 40,
-			//	height = 40,
-			//	melee = true,
-			//	useStyle = ItemUseStyleID.SwingThrow,
-			//	useTime = 20,
-			//	useAnimation = 20,
-			//	UseSound = SoundID.Item1,
-			//	autoReuse = true,
-			//	damage = 200,
-			//	knockBack = 2
-			//};
-
-			//mod.AddItem("StrongSword", new BaseItem(info));
-			return false; // Return false to not create the default item since we already created our items 
-		}
+		// Return false to not create the default item since we already created our items 
+		public override bool Autoload(ref string name) => false;
 
 		/// <summary>
 		/// Sets the default values of an <see cref="Item"/> by getting the values from <see cref="_info"/>

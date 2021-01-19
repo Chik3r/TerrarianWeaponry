@@ -1,6 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Terraria.Audio;
-using Terraria.UI;
+﻿using Terraria.Audio;
 
 namespace TerrarianWeaponry.Items
 {

@@ -1,7 +1,4 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using Newtonsoft.Json;
-
-namespace TerrarianWeaponry.JsonData
+﻿namespace TerrarianWeaponry.JsonData
 {
 	public class MaterialData
 	{
