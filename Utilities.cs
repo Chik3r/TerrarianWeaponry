@@ -57,25 +57,6 @@ namespace TerrarianWeaponry
 			return grid;
 		}
 
-		public static Color MultiplyColor(this Color color, float redMult, float greenMult, float blueMult)
-		{
-			byte red = (byte)MathHelper.Clamp(color.R * redMult, 0, byte.MaxValue);
-			byte green = (byte)MathHelper.Clamp(color.G * greenMult, 0, byte.MaxValue);
-			byte blue = (byte)MathHelper.Clamp(color.B * blueMult, 0, byte.MaxValue);
-			return new Color(red, green, blue, color.A);
-		}
-
-		internal static int GetMaxSize(float firstOrig, float firstMaxSize, float secondOrig, float secondMaxSize, bool _)
-		{
-			int returnVal;
-			if (firstOrig < firstMaxSize / 2)
-				returnVal = (int) ((firstMaxSize - firstOrig) + secondOrig); // orig at left
-			else
-				returnVal = (int) (firstOrig + (secondMaxSize - secondOrig)); // orig at right
-
-			return returnVal;
-		}
-
 		/// <summary>
 		/// Gets the max size for an image. <paramref name="firstOrig"/> and <paramref name="firstMaxSize"/> MUST be the bigger sized values
 		/// </summary>
@@ -83,18 +64,26 @@ namespace TerrarianWeaponry
 		/// <param name="firstMaxSize">First max size</param>
 		/// <param name="secondOrig">Second origin point</param>
 		/// <param name="secondMaxSize">Second max size</param>
+		/// <param name="clamp">Whether to clamp the result</param>
 		/// <returns></returns>
-		public static int GetMaxSize(float firstOrig, float firstMaxSize, float secondOrig, float secondMaxSize)
+		public static int GetMaxSize(float firstOrig, float firstMaxSize, float secondOrig, float secondMaxSize, bool clamp)
 		{
-			int returnVal = GetMaxSize(firstOrig, firstMaxSize, secondOrig, secondMaxSize, true);
-			return returnVal < firstMaxSize ? (int) firstMaxSize : returnVal;
+			int returnVal;
+			if (firstOrig < firstMaxSize / 2)
+				returnVal = (int) ((firstMaxSize - firstOrig) + secondOrig); // orig at left
+			else
+				returnVal = (int) (firstOrig + (secondMaxSize - secondOrig)); // orig at right
+
+			if (clamp)
+				return returnVal < firstMaxSize ? (int)firstMaxSize : returnVal;
+
+			return returnVal;
 		}
 
-		public static Point GetMaxSize(Point firstOrig, Texture2D firstTexture, Point secondOrig,
-			Texture2D secondTexture)
+		public static Point GetMaxSize(Point firstOrig, Texture2D firstTexture, Point secondOrig, Texture2D secondTexture)
 		{
-			return new Point(GetMaxSize(firstOrig.X, firstTexture.Width, secondOrig.X, secondTexture.Width),
-				GetMaxSize(firstOrig.Y, firstTexture.Height, secondOrig.Y, secondTexture.Height));
+			return new Point(GetMaxSize(firstOrig.X, firstTexture.Width, secondOrig.X, secondTexture.Width, true),
+				GetMaxSize(firstOrig.Y, firstTexture.Height, secondOrig.Y, secondTexture.Height, true));
 		}
 
 		public static Texture2D ResizeTexture2D(this Texture2D texture, int newWidth, int newHeight, GraphicsDevice device)
