@@ -6,6 +6,8 @@ namespace TerrarianWeaponry
 {
 	public class TerrarianWeaponry : Mod
 	{
+		public static TerrarianWeaponry Instance => ModContent.GetInstance<TerrarianWeaponry>();
+		
 		internal DataLoader loader;
 
 		public override void Load()
@@ -16,6 +18,8 @@ namespace TerrarianWeaponry
 
 			loader = new DataLoader(mainData);
 			loader.LoadData();
+
+			DataLoading.DataLoader.LoadData();
 		}
 	}
 }

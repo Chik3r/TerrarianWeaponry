@@ -7,6 +7,8 @@ namespace TerrarianWeaponry
 {
 	public static class Utilities
 	{
+		#region Color Arrays
+
 		public static Color[] ToColor(this Texture2D texture)
 		{
 			Color[] colors = new Color[texture.Width * texture.Height];
@@ -56,6 +58,10 @@ namespace TerrarianWeaponry
 
 			return grid;
 		}
+
+		#endregion
+
+		#region Texture Mixing
 
 		/// <summary>
 		/// Gets the max size for an image. <paramref name="firstOrig"/> and <paramref name="firstMaxSize"/> MUST be the bigger sized values
@@ -145,5 +151,7 @@ namespace TerrarianWeaponry
 			originalTexture.SetData(colorOriginal.To1DColor(originalTexture.Width, originalTexture.Height));
 			return originalTexture;
 		}
+
+		#endregion
 	}
 }
