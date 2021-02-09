@@ -16,7 +16,7 @@ namespace TerrarianWeaponry.DataLoading.Data
 			typeof(ToolRodPart)
 		};
 
-		public PickaxeTool(ItemInfo info, Texture2D texture) : base(info, texture) { }
+		public PickaxeTool(ItemInfo info, Texture2D texture, List<BaseMaterial> materials) : base(info, texture, materials) { }
 
 		public override void SafeSetDefaults()
 		{

@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace TerrarianWeaponry.DataLoading
 {
-	public class DataLoader
+	public static class DataLoader
 	{
 		public static void LoadData()
 		{
@@ -36,19 +36,20 @@ namespace TerrarianWeaponry.DataLoading
 							textures[i], materialCombo[i].OriginPoint);
 					
 					// Register the item
-					RegisterItem(baseTool, toolName, info, finalTexture);
+					RegisterItem(baseTool, toolName, info, finalTexture, materialCombo);
 				}
 			}
 		}
 
-		private static void RegisterItem(BaseTool tool, string itemName, ItemInfo info, Texture2D texture)
+		private static void RegisterItem(BaseTool tool, string itemName, ItemInfo info, Texture2D texture, List<BaseMaterial> materials)
 		{
 			// Get the type and create an instance of it
 			var toolType = tool.GetType();
-			var finalItem = (BaseTool) Activator.CreateInstance(toolType, info, texture);
+			var finalItem = (BaseTool) Activator.CreateInstance(toolType, info, texture, materials);
 
 			// Then register it
 			TerrarianWeaponry.Instance.AddItem(itemName, finalItem);
+			TerrarianWeaponry.Instance.RegisteredTools.Add(itemName, finalItem);
 		}
 
 		private static IEnumerable<BaseTool> GetTools()
@@ -60,7 +61,7 @@ namespace TerrarianWeaponry.DataLoading
 
 			// And return an IEnumerable from an instance of the types
 			foreach (Type childType in childTypes)
-				yield return (BaseTool) Activator.CreateInstance(childType, new object[] {null, null});
+				yield return (BaseTool) Activator.CreateInstance(childType, null, null, null);
 		}
 
 		private static List<List<BaseMaterial>> GetMaterialCombinations(BaseTool tool)

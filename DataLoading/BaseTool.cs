@@ -11,6 +11,7 @@ namespace TerrarianWeaponry.DataLoading
 	{
 		private ItemInfo _info;
 		private readonly Texture2D _texture;
+		internal List<BaseMaterial> Materials;
 
 		/// <summary>
 		/// Override this to set the list of parts of this tool.
@@ -23,10 +24,11 @@ namespace TerrarianWeaponry.DataLoading
 		/// </summary>
 		public abstract string ToolName { get; }
 
-		public BaseTool(ItemInfo info, Texture2D texture)
+		public BaseTool(ItemInfo info, Texture2D texture, List<BaseMaterial> materials)
 		{
 			_info = info;
 			_texture = texture;
+			Materials = materials;
 		}
 
 		#region ModItem methods
