@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace TerrarianWeaponry.DataLoading.Data.Parts
 {
@@ -7,10 +6,10 @@ namespace TerrarianWeaponry.DataLoading.Data.Parts
 	{
 		public override string PartName => "Pickaxe Head";
 
-		internal override List<Type> ValidMaterials => new List<Type>
+		internal override List<BaseMaterial> ValidMaterials => new List<BaseMaterial>
 		{
-			typeof(TestMainMaterial),
-			typeof(TestBothMaterial)
+			new TestMainMaterial(),
+			new TestBothMaterial(),
 		};
 	}
 }

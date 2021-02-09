@@ -11,13 +11,12 @@ namespace TerrarianWeaponry.DataLoading
 	{
 		private ItemInfo _info;
 		private readonly Texture2D _texture;
-		internal List<BaseMaterial> Materials;
+		internal readonly List<BaseMaterial> Materials;
 
 		/// <summary>
 		/// Override this to set the list of parts of this tool.
-		/// <br/> Make sure all types extend <see cref="BasePart"/>
 		/// </summary>
-		public abstract List<Type> ToolParts { get; }
+		public abstract List<BasePart> ToolParts { get; }
 
 		/// <summary>
 		/// Override this to set the name of the tool, ex: a pickaxe would set this to "Pickaxe"

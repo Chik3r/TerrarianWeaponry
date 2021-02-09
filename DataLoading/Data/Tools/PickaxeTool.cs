@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria.ID;
 using TerrarianWeaponry.DataLoading.Data.Parts;
@@ -10,10 +9,10 @@ namespace TerrarianWeaponry.DataLoading.Data
 	{
 		public override string ToolName => "Pickaxe";
 
-		public override List<Type> ToolParts => new List<Type>
+		public override List<BasePart> ToolParts => new List<BasePart>
 		{
-			typeof(PickaxeHeadPart),
-			typeof(ToolRodPart)
+			new PickaxeHeadPart(),
+			new ToolRodPart(),
 		};
 
 		public PickaxeTool(ItemInfo info, Texture2D texture, List<BaseMaterial> materials) : base(info, texture, materials) { }

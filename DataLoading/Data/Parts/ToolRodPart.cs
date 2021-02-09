@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace TerrarianWeaponry.DataLoading.Data.Parts
 {
@@ -7,10 +6,10 @@ namespace TerrarianWeaponry.DataLoading.Data.Parts
 	{
 		public override string PartName => "Tool Rod";
 
-		internal override List<Type> ValidMaterials => new List<Type>
+		internal override List<BaseMaterial> ValidMaterials => new List<BaseMaterial>
 		{
-			typeof(TestModifierMaterial),
-			typeof(TestBothMaterial)
+			new TestModifierMaterial(),
+			new TestBothMaterial(),
 		};
 	}
 }

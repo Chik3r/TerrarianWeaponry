@@ -66,9 +66,9 @@ namespace TerrarianWeaponry.DataLoading
 
 		private static List<List<BaseMaterial>> GetMaterialCombinations(BaseTool tool)
 		{
-			var parts = LoadParts(tool);
+			var parts = tool.ToolParts;
 			var materials = from part in parts
-				select LoadMaterials(part);
+				select part.ValidMaterials;
 
 			return InternalMaterialCombinations(materials);
 		}
@@ -90,32 +90,6 @@ namespace TerrarianWeaponry.DataLoading
 			return (from materialPart in current
 				from combo in combos
 				select combo.Concat(new[] { materialPart }).ToList()).ToList();
-		}
-
-		private static IEnumerable<BasePart> LoadParts(BaseTool baseTool)
-		{
-			var baseType = typeof(BasePart);
-
-			foreach (Type toolPartType in baseTool.ToolParts)
-			{
-				if (!baseType.IsAssignableFrom(toolPartType))
-					throw new ArgumentException("All types inside ToolParts should extend BasePart");
-
-				yield return (BasePart)Activator.CreateInstance(toolPartType);
-			}
-		}
-
-		private static IEnumerable<BaseMaterial> LoadMaterials(BasePart basePart)
-		{
-			var baseType = typeof(BaseMaterial);
-
-			foreach (Type toolPartType in basePart.ValidMaterials)
-			{
-				if (!baseType.IsAssignableFrom(toolPartType))
-					throw new ArgumentException("All types inside ValidMaterials should extend BaseMaterial");
-
-				yield return (BaseMaterial)Activator.CreateInstance(toolPartType);
-			}
 		}
 	}
 }
