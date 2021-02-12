@@ -9,6 +9,8 @@ namespace TerrarianWeaponry.DataLoading
 		/// </summary>
 		public abstract string PartName { get; }
 
+		public virtual string Description => "";
+
 		/// <summary>
 		/// Override this to set the list of materials of this part.
 		/// <br/>The "material" of the tuple should be set to the material this part can be crafted from
