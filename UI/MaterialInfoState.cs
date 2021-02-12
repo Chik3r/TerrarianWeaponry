@@ -92,6 +92,9 @@ namespace TerrarianWeaponry.UI
 			// Create a new empty item info
 			ItemInfo itemInfo = new ItemInfo();
 
+			if (material.Modifier != null)
+				_infoList.Add(new UIText($"Modifier: {material.Modifier}"));
+
 			// Modify the stats of the item info, with a default modifier
 			material.ModifyStats(ref itemInfo, 1f);
 

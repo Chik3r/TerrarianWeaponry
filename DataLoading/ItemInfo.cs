@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using Terraria.Audio;
 
 #pragma warning disable 649
@@ -10,6 +11,7 @@ namespace TerrarianWeaponry.DataLoading
 	public struct ItemInfo
 	{
 		private FieldInfo[] fields;
+		private Regex simpleRegex;
 
 		public bool? mech;
 		public int? fishingPole;
@@ -77,9 +79,15 @@ namespace TerrarianWeaponry.DataLoading
 
 		public IEnumerable<string> GetModifiedFields()
 		{
+			if (simpleRegex == null)
+				simpleRegex = new Regex("([A-Z])");
+
 			foreach (FieldInfo modifiedField in GetModifiedFieldInfo())
 			{
-				yield return $"{modifiedField.Name}: {modifiedField.GetValue(this)}";
+				string fieldName = simpleRegex.Replace(modifiedField.Name, " $1").Trim();
+				fieldName = char.ToUpper(fieldName[0]) + fieldName.Substring(1);
+
+				yield return $"{fieldName}: {modifiedField.GetValue(this)}";
 			}
 		}
 	}
