@@ -1,4 +1,6 @@
-﻿using Terraria.Audio;
+﻿using System.Collections.Generic;
+using System.Reflection;
+using Terraria.Audio;
 
 #pragma warning disable 649
 // ReSharper disable InconsistentNaming
@@ -7,6 +9,8 @@ namespace TerrarianWeaponry.DataLoading
 {
 	public struct ItemInfo
 	{
+		private FieldInfo[] fields;
+
 		public bool? mech;
 		public int? fishingPole;
 		public int? bait;
@@ -58,5 +62,25 @@ namespace TerrarianWeaponry.DataLoading
 		public int? reuseDelay;
 		public int? width;
 		public int? height;
+
+		private IEnumerable<FieldInfo> GetModifiedFieldInfo()
+		{
+			if (fields == null)
+				fields = typeof(ItemInfo).GetFields();
+
+			foreach (FieldInfo field in fields)
+			{
+				if (field.GetValue(this) != null)
+					yield return field;
+			}
+		}
+
+		public IEnumerable<string> GetModifiedFields()
+		{
+			foreach (FieldInfo modifiedField in GetModifiedFieldInfo())
+			{
+				yield return $"{modifiedField.Name}: {modifiedField.GetValue(this)}";
+			}
+		}
 	}
 }
