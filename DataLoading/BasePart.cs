@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace TerrarianWeaponry.DataLoading
 {
@@ -12,7 +11,9 @@ namespace TerrarianWeaponry.DataLoading
 
 		/// <summary>
 		/// Override this to set the list of materials of this part.
+		/// <br/>The "material" of the tuple should be set to the material this part can be crafted from
+		/// <br/>The "texture" of the tuple should be set to the texture of the "material"
 		/// </summary>
-		internal abstract List<BaseMaterial> ValidMaterials { get; }
+		internal abstract List<(BaseMaterial material, TextureInfo textureInfo)> ValidMaterials { get; }
 	}
 }

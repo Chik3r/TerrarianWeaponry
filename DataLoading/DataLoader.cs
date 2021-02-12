@@ -19,36 +19,36 @@ namespace TerrarianWeaponry.DataLoading
 				{
 					// Make a new ItemInfo and get the max modifier of all materials
 					var info = new ItemInfo();
-					float maxModifier = materialCombo.Max(m => m.Modifier) ?? 1f;
+					float maxModifier = materialCombo.Max(m => m.material.Modifier) ?? 1f;
 
 					// Make the tool name be like this: "ToolName: Material1-Material2-...-MaterialN"
-					string toolName = $"{baseTool.ToolName}: {string.Join("-", materialCombo.Select(x => x.MaterialName))}";
+					string toolName = $"{baseTool.ToolName}: {string.Join("-", materialCombo.Select(x => x.material.MaterialName))}";
 
 					// Loop over the materials and modify the info
-					foreach (BaseMaterial material in materialCombo)
+					foreach ((BaseMaterial material, _) in materialCombo)
 						material.ModifyStats(ref info, maxModifier);
 
 					// Calculate the item's texture from the materials
-					var textures = materialCombo.Select(m => TerrarianWeaponry.Instance.GetTexture(m.Texture)).ToArray();
-					Point originPoint = materialCombo.First().OriginPoint;
+					var textures = materialCombo.Select(m => TerrarianWeaponry.Instance.GetTexture(m.textureInfo.Texture)).ToArray();
+					Point originPoint = materialCombo.First().textureInfo.OriginPoint;
 					Texture2D finalTexture = textures.First();
 
 					for (int i = 1; i < textures.Length; i++)
 						finalTexture = Utilities.MixTexture2D(finalTexture, originPoint, 
-							textures[i], materialCombo[i].OriginPoint);
+							textures[i], materialCombo[i].textureInfo.OriginPoint);
 					
 					// Register the item
-					RegisterItem(baseTool, toolName, info, finalTexture, materialCombo);
+					RegisterItem(baseTool, toolName, info, finalTexture, materialCombo.Select(m => m.material));
 				}
 			}
 		}
 
-		private static void RegisterItem(BaseTool tool, string itemName, ItemInfo info, Texture2D texture, List<BaseMaterial> materials)
+		private static void RegisterItem(BaseTool tool, string itemName, ItemInfo info, Texture2D texture, IEnumerable<BaseMaterial> materials)
 		{
 			// Get the type and create an instance of it
 			var toolType = tool.GetType();
-			var finalItem = (BaseTool) Activator.CreateInstance(toolType, info, texture, materials);
-
+			var finalItem = (BaseTool) Activator.CreateInstance(toolType, info, texture, materials.ToList());
+			
 			// Then register it
 			TerrarianWeaponry.Instance.AddItem(itemName, finalItem);
 			TerrarianWeaponry.Instance.RegisteredTools.Add(itemName, finalItem);
@@ -79,7 +79,7 @@ namespace TerrarianWeaponry.DataLoading
 
 		#region Material Combo
 
-		private static List<List<BaseMaterial>> GetMaterialCombinations(BaseTool tool)
+		private static List<List<(BaseMaterial material, TextureInfo textureInfo)>> GetMaterialCombinations(BaseTool tool)
 		{
 			var parts = tool.ToolParts;
 			var materials = from part in parts
@@ -88,14 +88,17 @@ namespace TerrarianWeaponry.DataLoading
 			return InternalMaterialCombinations(materials);
 		}
 
-		private static List<List<BaseMaterial>> InternalMaterialCombinations(IEnumerable<IEnumerable<BaseMaterial>> remainingMaterials)
+		private static List<List<(BaseMaterial material, TextureInfo textureInfo)>> InternalMaterialCombinations(
+			IEnumerable<IEnumerable<(BaseMaterial material, TextureInfo textureInfo)>> remainingMaterials)
 		{
 			// Convert remainingMaterials to an array so that it isn't enumerated multiple times
 			var remainingMaterialsEnumerated = remainingMaterials.Select(x => x.ToArray()).ToArray();
 
 			// If there's only one material array left, make a list of lists out of it
 			if (remainingMaterialsEnumerated.Count() == 1)
-				return remainingMaterialsEnumerated.First().Select(r => new List<BaseMaterial> { r }).ToList();
+				return remainingMaterialsEnumerated.First()
+					.Select(r => new List<(BaseMaterial material, TextureInfo textureInfo)> {r})
+					.ToList();
 
 			// Get the first material array, and then get combos for other material arrays
 			var current = remainingMaterialsEnumerated.First();
@@ -104,7 +107,7 @@ namespace TerrarianWeaponry.DataLoading
 			// Return combos
 			return (from materialPart in current
 				from combo in combos
-				select combo.Concat(new[] { materialPart }).ToList()).ToList();
+				select combo.Concat(new[] {materialPart}).ToList()).ToList();
 		}
 
 		#endregion

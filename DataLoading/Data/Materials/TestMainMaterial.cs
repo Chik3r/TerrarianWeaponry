@@ -7,9 +7,9 @@ namespace TerrarianWeaponry.DataLoading.Data
 	{
 		public override string MaterialName => "Main";
 
-		public override string Texture => "DataLoading/Data/Materials/Textures/TestMainMaterial";
+		//public override string Texture => "DataLoading/Data/Materials/Textures/TestMainMaterial";
 
-		public override Point OriginPoint => new Point(9, 10);
+		//public override Point OriginPoint => new Point(9, 10);
 
 		public override int[] MaterialTypes => new int[]
 		{
