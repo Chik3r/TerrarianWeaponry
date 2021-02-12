@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
@@ -13,7 +11,8 @@ namespace TerrarianWeaponry.UI
 	{
 		internal Action OnCloseBtnClicked;
 		internal UIPanel header;
-		private bool isDraggable = true;
+		internal static Vector2 lastPos = new Vector2(400, 400);
+		private static bool isDraggable = true;
 
 		public DraggableUIPanel(float width, float height)
 		{
@@ -42,10 +41,10 @@ namespace TerrarianWeaponry.UI
 			header.Append(closeBtn);
 
 			// Create a lock button
-			var lockBtn = new UIImageButton(ModContent.GetTexture("Terraria/Lock_1"));
+			var lockBtn = new UIImageButton(ModContent.GetTexture("Terraria/Lock_" + (isDraggable ? 1 : 0)));
 			lockBtn.Width = new StyleDimension(24, 0);
 			lockBtn.Height = new StyleDimension(24, 0);
-			lockBtn.Left = new StyleDimension(width- 65, 0);
+			lockBtn.Left = new StyleDimension(width - 65, 0);
 			lockBtn.Top = new StyleDimension(5, 0);
 			lockBtn.SetPadding(0);
 			lockBtn.OnClick += UpdateLock;
@@ -107,6 +106,8 @@ namespace TerrarianWeaponry.UI
 				Top.Set(Main.mouseY - offset.Y, 0f);
 
 				Recalculate();
+
+				lastPos = new Vector2(Left.Pixels, Top.Pixels);
 			}
 
 			// Here we check if the DragableUIPanel is outside the Parent UIElement rectangle. 
