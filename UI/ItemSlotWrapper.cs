@@ -5,7 +5,7 @@ using Terraria;
 using Terraria.GameInput;
 using Terraria.UI;
 
-namespace TerrarianWeaponry.oldUI
+namespace TerrarianWeaponry.UI
 {
 	public class ItemSlotWrapper : UIElement
 	{

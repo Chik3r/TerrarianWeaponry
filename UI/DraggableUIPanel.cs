@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Reflection;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
+using Terraria.ModLoader;
 using Terraria.UI;
 
 namespace TerrarianWeaponry.UI
@@ -10,6 +13,7 @@ namespace TerrarianWeaponry.UI
 	{
 		internal Action OnCloseBtnClicked;
 		internal UIPanel header;
+		private bool isDraggable = true;
 
 		public DraggableUIPanel(float width, float height)
 		{
@@ -36,6 +40,35 @@ namespace TerrarianWeaponry.UI
 			closeBtn.BackgroundColor.A = 255;
 			closeBtn.OnClick += (evt, elm) => OnCloseBtnClicked?.Invoke();
 			header.Append(closeBtn);
+
+			// Create a lock button
+			var lockBtn = new UIImageButton(ModContent.GetTexture("Terraria/Lock_1"));
+			lockBtn.Width = new StyleDimension(24, 0);
+			lockBtn.Height = new StyleDimension(24, 0);
+			lockBtn.Left = new StyleDimension(width- 65, 0);
+			lockBtn.Top = new StyleDimension(5, 0);
+			lockBtn.SetPadding(0);
+			lockBtn.OnClick += UpdateLock;
+			header.Append(lockBtn);
+
+			// Manually add the lock button to the top, since Append is dumb
+			//lockBtn.Remove();
+			//lockBtn.Parent = header;
+			//var elementsField = typeof(UIElement).GetField("Elements", BindingFlags.Instance | BindingFlags.NonPublic);
+			//var headerElements = (List<UIElement>) elementsField.GetValue(header);
+			////header.Elements.Add(element);
+			//headerElements.Insert(headerElements.Count, lockBtn);
+			//elementsField.SetValue(header, headerElements);
+			//lockBtn.Recalculate();
+		}
+
+		private void UpdateLock(UIMouseEvent evt, UIElement listeningElement)
+		{
+			if (!(listeningElement is UIImageButton imageBtn))
+				return;
+
+			isDraggable = !isDraggable;
+			imageBtn.SetImage(ModContent.GetTexture("Terraria/Lock_" + (isDraggable ? 1 : 0)));
 		}
 
 		#region Dragging Code
@@ -47,6 +80,9 @@ namespace TerrarianWeaponry.UI
 		private void Header_OnMouseUp(UIMouseEvent evt, UIElement listeningElement)
 		{
 			base.MouseUp(evt);
+
+			if (!isDraggable)
+				return;
 
 			Vector2 end = evt.MousePosition;
 			dragging = false;
@@ -61,6 +97,9 @@ namespace TerrarianWeaponry.UI
 		{
 			base.MouseDown(evt);
 
+			if (!isDraggable)
+				return;
+
 			dragging = true;
 			offset = new Vector2(evt.MousePosition.X - Left.Pixels, evt.MousePosition.Y - Top.Pixels);
 		}
@@ -72,7 +111,7 @@ namespace TerrarianWeaponry.UI
 			if (ContainsPoint(Main.MouseScreen))
 				Main.LocalPlayer.mouseInterface = true;
 
-			if (dragging)
+			if (dragging && isDraggable)
 			{
 				Left.Set(Main.mouseX - offset.X, 0f);
 				Top.Set(Main.mouseY - offset.Y, 0f);
