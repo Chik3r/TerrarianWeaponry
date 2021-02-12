@@ -9,10 +9,23 @@ namespace TerrarianWeaponry.UI
 {
 	public class ItemSlotWrapper : UIElement
 	{
-		internal Item Item;
+		private Item _item;
+		internal Item Item
+		{
+			get => _item;
+			set
+			{
+				if (_item != value)
+					OnItemChanged?.Invoke(value);
+
+				_item = value;
+			}
+		}
+
 		private readonly int _context;
 		private readonly float _scale;
 		internal Func<Item, bool> ValidItemFunc;
+		internal Action<Item> OnItemChanged;
 
 		public ItemSlotWrapper(int context = ItemSlot.Context.ChestItem, float scale = 1f)
 		{
@@ -30,6 +43,8 @@ namespace TerrarianWeaponry.UI
 			float oldScale = Main.inventoryScale;
 			Main.inventoryScale = _scale;
 			Rectangle rect = GetDimensions().ToRectangle();
+			
+			Item tmpItem = Item;
 
 			if (ContainsPoint(Main.MouseScreen) && !PlayerInput.IgnoreMouseInterface)
 			{
@@ -37,12 +52,15 @@ namespace TerrarianWeaponry.UI
 				if (ValidItemFunc == null || ValidItemFunc(Main.mouseItem))
 				{
 					// Handle handles all the click and hover actions based on the context.
-					ItemSlot.Handle(ref Item, _context);
+					ItemSlot.Handle(ref tmpItem, _context);
+					Item = tmpItem;
 				}
 			}
 
 			// Draw draws the slot itself and Item. Depending on context, the color will change, as will drawing other things like stack counts.
-			ItemSlot.Draw(spriteBatch, ref Item, _context, rect.TopLeft());
+			tmpItem = Item;
+			ItemSlot.Draw(spriteBatch, ref tmpItem, _context, rect.TopLeft());
+			Item = tmpItem;
 			Main.inventoryScale = oldScale;
 		}
 	}
