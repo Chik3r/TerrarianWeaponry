@@ -10,6 +10,8 @@ namespace TerrarianWeaponry.DataLoading
 	{
 		public static void LoadData()
 		{
+			RegisterMaterials();
+
 			foreach (BaseTool baseTool in GetTools())
 			{
 				var combos = GetMaterialCombinations(baseTool);
@@ -54,15 +56,28 @@ namespace TerrarianWeaponry.DataLoading
 
 		private static IEnumerable<BaseTool> GetTools()
 		{
-			// Get all types extending BaseTool
-			var baseType = typeof(BaseTool);
-			var childTypes = TerrarianWeaponry.Instance.Code.GetTypes()
-				.Where(t => baseType.IsAssignableFrom(t) && !t.IsAbstract);
-
-			// And return an IEnumerable from an instance of the types
-			foreach (Type childType in childTypes)
-				yield return (BaseTool) Activator.CreateInstance(childType, null, null, null);
+			return Utilities.GetTypesExtendingT<BaseTool>(null, null, null);
 		}
+
+		#region Material Item Registering
+
+		private static void RegisterMaterials()
+		{
+			foreach (BaseMaterial baseMaterial in GetBaseMaterials())
+			{
+				foreach (int materialItemType in baseMaterial.MaterialTypes)
+					TerrarianWeaponry.Instance.RegisteredMaterials.Add(materialItemType, baseMaterial);
+			}
+		}
+
+		private static IEnumerable<BaseMaterial> GetBaseMaterials()
+		{
+			return Utilities.GetTypesExtendingT<BaseMaterial>();
+		}
+
+		#endregion
+
+		#region Material Combo
 
 		private static List<List<BaseMaterial>> GetMaterialCombinations(BaseTool tool)
 		{
@@ -91,5 +106,7 @@ namespace TerrarianWeaponry.DataLoading
 				from combo in combos
 				select combo.Concat(new[] { materialPart }).ToList()).ToList();
 		}
+
+		#endregion
 	}
 }

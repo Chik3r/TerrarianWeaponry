@@ -4,7 +4,6 @@ using Terraria;
 using Terraria.ModLoader;
 using Terraria.UI;
 using TerrarianWeaponry.DataLoading;
-using TerrarianWeaponry.oldUI;
 using TerrarianWeaponry.UI;
 
 namespace TerrarianWeaponry
@@ -14,6 +13,7 @@ namespace TerrarianWeaponry
 		public static TerrarianWeaponry Instance => ModContent.GetInstance<TerrarianWeaponry>();
 
 		internal readonly Dictionary<string, BaseTool> RegisteredTools = new Dictionary<string, BaseTool>();
+		internal readonly Dictionary<int, BaseMaterial> RegisteredMaterials = new Dictionary<int, BaseMaterial>();
 
 		//private UIState _toolForgeUI;
 		internal UserInterface UserInterface;
