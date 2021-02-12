@@ -50,16 +50,6 @@ namespace TerrarianWeaponry.UI
 			lockBtn.SetPadding(0);
 			lockBtn.OnClick += UpdateLock;
 			header.Append(lockBtn);
-
-			// Manually add the lock button to the top, since Append is dumb
-			//lockBtn.Remove();
-			//lockBtn.Parent = header;
-			//var elementsField = typeof(UIElement).GetField("Elements", BindingFlags.Instance | BindingFlags.NonPublic);
-			//var headerElements = (List<UIElement>) elementsField.GetValue(header);
-			////header.Elements.Add(element);
-			//headerElements.Insert(headerElements.Count, lockBtn);
-			//elementsField.SetValue(header, headerElements);
-			//lockBtn.Recalculate();
 		}
 
 		private void UpdateLock(UIMouseEvent evt, UIElement listeningElement)
