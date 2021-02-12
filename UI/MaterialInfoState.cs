@@ -1,7 +1,10 @@
-﻿using Terraria;
+﻿using System.Linq;
+using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader.UI;
 using Terraria.UI;
+using TerrarianWeaponry.DataLoading;
+using TerrarianWeaponry.DataLoading.Data;
 
 namespace TerrarianWeaponry.UI
 {
@@ -28,6 +31,7 @@ namespace TerrarianWeaponry.UI
 				VAlign = 0.5f,
 				Left = new StyleDimension(90, 0)
 			};
+			_materialSlot.OnItemChanged += OnItemChanged;
 			_tabPanel.Append(_materialSlot);
 
 			#region Create Material Info Panel
@@ -46,7 +50,9 @@ namespace TerrarianWeaponry.UI
 			_infoList = new UIList
 			{
 				Width = new StyleDimension(235, 0),
-				Height = new StyleDimension(0, 1)
+				Height = new StyleDimension(0, 1),
+				Left = new StyleDimension(5, 0),
+				Top = new StyleDimension(5, 0)
 			};
 			_infoPanel.Append(_infoList);
 
@@ -75,6 +81,26 @@ namespace TerrarianWeaponry.UI
 			// Return the item to the player when the UI is closed/changed
 			Main.LocalPlayer.QuickSpawnClonedItem(_materialSlot.Item, _materialSlot.Item.stack);
 			_materialSlot.Item.TurnToAir();
+		}
+
+		private void OnItemChanged(Item item)
+		{
+			// Check if there's a material with the item type as a valid item
+			if (!TerrarianWeaponry.Instance.RegisteredMaterials.TryGetValue(item.type, out BaseMaterial material))
+			{
+				_infoList.Clear();
+				return;
+			}
+
+			// Create a new empty item info
+			ItemInfo itemInfo = new ItemInfo();
+
+			// Modify the stats of the item info, with a default modifier
+			material.ModifyStats(ref itemInfo, 1f);
+
+			// Get all modified fields and make a new UIText for them
+			foreach (string modifiedField in itemInfo.GetModifiedFields()) 
+				_infoList.Add(new UIText(modifiedField));
 		}
 	}
 }
