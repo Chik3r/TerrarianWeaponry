@@ -1,5 +1,6 @@
 ﻿using Terraria;
 using Terraria.GameContent.UI.Elements;
+using Terraria.ModLoader.UI;
 using Terraria.UI;
 
 namespace TerrarianWeaponry.UI
@@ -9,6 +10,7 @@ namespace TerrarianWeaponry.UI
 		private TabPanel _tabPanel;
 		private ItemSlotWrapper _materialSlot;
 		private UIPanel _infoPanel;
+		private UIList _infoList;
 
 		public override void OnInitialize()
 		{
@@ -37,7 +39,27 @@ namespace TerrarianWeaponry.UI
 				Top = new StyleDimension(40, 0),
 				Height = new StyleDimension(195, 0)
 			};
+			_infoPanel.SetPadding(0);
 			_tabPanel.Append(_infoPanel);
+
+			// Create a list
+			_infoList = new UIList
+			{
+				Width = new StyleDimension(235, 0),
+				Height = new StyleDimension(0, 1)
+			};
+			_infoPanel.Append(_infoList);
+
+			// And add a scrollbar
+			UIScrollbar infoScrollbar = new UIScrollbar
+			{
+				Height = new StyleDimension(185, 0),
+				Top = new StyleDimension(5, 0),
+				Width = new StyleDimension(20, 0),
+				Left = new StyleDimension(235, 0)
+			}.WithView(50, 250);
+			_infoPanel.Append(infoScrollbar);
+			_infoList.SetScrollbar(infoScrollbar);
 
 			#endregion
 
