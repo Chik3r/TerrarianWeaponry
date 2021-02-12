@@ -22,7 +22,7 @@ namespace TerrarianWeaponry.DataLoading
 		/// <summary>
 		/// Override this to set the valid item types to create this material, ex: 3 (or ItemID.StoneBlock) for a stone block
 		/// </summary>
-		public abstract short[] MaterialTypes { get; }
+		public abstract int[] MaterialTypes { get; }
 		
 		public virtual float? Modifier { get; }
 

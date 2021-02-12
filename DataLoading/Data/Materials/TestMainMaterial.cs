@@ -11,7 +11,7 @@ namespace TerrarianWeaponry.DataLoading.Data
 
 		public override Point OriginPoint => new Point(9, 10);
 
-		public override short[] MaterialTypes => new[]
+		public override int[] MaterialTypes => new int[]
 		{
 			ItemID.IronBar,
 		};
