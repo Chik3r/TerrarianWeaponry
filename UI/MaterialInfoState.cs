@@ -1,10 +1,8 @@
-﻿using System.Linq;
-using Terraria;
+﻿using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader.UI;
 using Terraria.UI;
 using TerrarianWeaponry.DataLoading;
-using TerrarianWeaponry.DataLoading.Data;
 
 namespace TerrarianWeaponry.UI
 {
@@ -85,12 +83,11 @@ namespace TerrarianWeaponry.UI
 
 		private void OnItemChanged(Item item)
 		{
+			_infoList.Clear();
+
 			// Check if there's a material with the item type as a valid item
 			if (!TerrarianWeaponry.Instance.RegisteredMaterials.TryGetValue(item.type, out BaseMaterial material))
-			{
-				_infoList.Clear();
 				return;
-			}
 
 			// Create a new empty item info
 			ItemInfo itemInfo = new ItemInfo();
