@@ -2,14 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Graphics;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader.UI;
 using Terraria.UI;
-using Terraria.UI.Chat;
 using TerrarianWeaponry.DataLoading;
 
 namespace TerrarianWeaponry.UI
@@ -229,28 +226,5 @@ namespace TerrarianWeaponry.UI
 			foreach (string text in wrappedText)
 				_toolInfoDescription.Add(new UIText(text));
 		}
-
-		//class WrappedUIText : UIText
-		//{
-
-		//	public WrappedUIText(string text, float textScale = 1, bool large = false) : base(text, textScale, large) { }
-
-		//	public override void Draw(SpriteBatch spriteBatch)
-		//	{
-		//		base.Draw(spriteBatch);
-		//		//float y = 130 + 4 * 30;
-		//		//int num = 180 + (Main.screenWidth - 800) / 2;
-		//		//Vector2 vector = new Vector2(num, y);
-		//		//Vector2 vector = GetInnerDimensions().Position();
-		//		//var vector = _pos;
-		//		var vector = new Vector2(Left.Pixels, Top.Pixels);
-		//		DynamicSpriteFont font = Main.fontMouseText;
-		//		Vector2 vector3 = new Vector2(0.9f);
-		//		Vector2 stringSize = ChatManager.GetStringSize(font, Text, vector3);
-		//		Color baseColor = new Color(255, 255, 255, 255);
-
-		//		ChatManager.DrawColorCodedStringWithShadow(spriteBatch, Main.fontMouseText, Text, vector + stringSize * 0.5f, baseColor, 0f, stringSize * 0.5f, vector3, 140);
-		//	}
-		//}
 	}
 }
