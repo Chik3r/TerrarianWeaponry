@@ -1,7 +1,15 @@
-﻿using Terraria;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Graphics;
+using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader.UI;
 using Terraria.UI;
+using Terraria.UI.Chat;
 using TerrarianWeaponry.DataLoading;
 
 namespace TerrarianWeaponry.UI
@@ -12,7 +20,11 @@ namespace TerrarianWeaponry.UI
 		private UIPanel _toolsPanel;
 		private UIList _toolsList;
 		private ItemSlotWrapper _materialSlot;
+		
 		private UIPanel _toolInfoPanel;
+		private UIImage _toolInfoImage;
+		private UIText _toolInfoName;
+		private UIList _toolInfoDescription;
 
 		public override void OnInitialize()
 		{
@@ -71,15 +83,62 @@ namespace TerrarianWeaponry.UI
 			//_materialSlot.OnItemChanged += OnItemChanged;
 			_tabPanel.Append(_materialSlot);
 
-			var otherPanel = new UIPanel
+			#region Create panel for part info
+
+			_toolInfoPanel = new UIPanel
 			{
 				Left = new StyleDimension(_tabPanel.Width.Pixels - 150 - 20, 0),
 				Top = new StyleDimension(40, 0),
 				Width = new StyleDimension(150, 0),
 				Height = new StyleDimension(190, 0)
 			};
-			otherPanel.SetPadding(0);
-			_tabPanel.Append(otherPanel);
+			_toolInfoPanel.SetPadding(0);
+			_tabPanel.Append(_toolInfoPanel);
+
+			// Create an image for the info with a default empty image
+			var texture = new Texture2D(Main.instance.GraphicsDevice, 1, 1);
+			_toolInfoImage = new UIImage(texture)
+			{
+				HAlign = .5f, 
+				ImageScale = 20f / (texture.Width > texture.Height ? texture.Width : texture.Height),
+			};
+			_toolInfoImage.SetImage(texture);
+			_toolInfoImage.Width = new StyleDimension(20, 0);
+			_toolInfoImage.Height = new StyleDimension(20, 0);
+			_toolInfoImage.Left = new StyleDimension(-10, 0);
+			_toolInfoPanel.Append(_toolInfoImage);
+
+			// Add a UIText for the name of the part
+			_toolInfoName = new UIText("")
+			{
+				Top = new StyleDimension(35, 0),
+				HAlign = 0.5f,
+				Left = new StyleDimension(-5, 0)
+			};
+			_toolInfoPanel.Append(_toolInfoName);
+
+			// Add a UIList for the description of the part, each line is a new element in the list
+			_toolInfoDescription = new UnsortedList
+			{
+				Top = new StyleDimension(60, 0),
+				Left = new StyleDimension(8, 0),
+				Width = new StyleDimension(_toolInfoPanel.Width.Pixels - 20, 0),
+				Height = new StyleDimension(125, 0)
+			};
+			_toolInfoPanel.Append(_toolInfoDescription);
+
+			UIScrollbar descriptionScrollbar = new UIScrollbar
+			{
+				Height = new StyleDimension(_toolInfoPanel.Height.Pixels - 10, 0),
+				Top = new StyleDimension(5, 0),
+				Width = new StyleDimension(20, 0),
+				Left = new StyleDimension(_toolInfoPanel.Width.Pixels - 20, 0)
+				//HAlign = 1f
+			}.WithView(20, 130);
+			_toolInfoPanel.Append(descriptionScrollbar);
+			_toolInfoDescription.SetScrollbar(descriptionScrollbar);
+			
+			#endregion
 
 			Append(_tabPanel);
 		}
@@ -112,7 +171,86 @@ namespace TerrarianWeaponry.UI
 			if (!(evt.Target is UITextBasePart uiText))
 				return;
 
-			Main.NewText($"Wow: {uiText.basePart.PartName}");
+			UpdateInfo(uiText.basePart);
 		}
+
+		private IEnumerable<string> WrapText(string inputString)
+		{
+			int characterLimit = 14;
+
+			string[] splitText = inputString.Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries);
+			StringBuilder sb = new StringBuilder();
+
+			string line = "";
+			foreach (string word in splitText)
+			{
+				if ((line + word).Length > characterLimit)
+				{
+					sb.AppendLine(line);
+					line = "";
+				}
+
+				line += $"{word} ";
+			}
+
+			if (line.Length > 0)
+				sb.AppendLine(line);
+
+			return sb.ToString().Split(new []{Environment.NewLine}, StringSplitOptions.RemoveEmptyEntries);
+		}
+
+		private void UpdateInfo(BasePart part)
+		{
+			if (part == null)
+			{
+				var texture = new Texture2D(Main.instance.GraphicsDevice, 1, 1);
+				_toolInfoImage.SetImage(texture);
+				_toolInfoImage.ImageScale = 20f / (texture.Width > texture.Height ? texture.Width : texture.Height);
+
+				_toolInfoName.SetText("");
+
+				_toolInfoDescription.Clear();
+				return; 
+			}
+
+			TextureInfo textureInfo = part.ValidMaterials.First().textureInfo;
+			Texture2D realTexture = TerrarianWeaponry.Instance.GetTexture(textureInfo.Texture);
+			_toolInfoImage.SetImage(realTexture);
+			_toolInfoImage.ImageScale = 20f / (realTexture.Width > realTexture.Height ? realTexture.Width : realTexture.Height);
+			_toolInfoImage.Left = new StyleDimension(0, 0);
+			_toolInfoImage.Top = realTexture.Height > 20 
+				? new StyleDimension(0, 0) 
+				: new StyleDimension(5, 0);
+
+			_toolInfoName.SetText(part.PartName);
+
+			_toolInfoDescription.Clear();
+			var wrappedText = WrapText(part.Description);
+			foreach (string text in wrappedText)
+				_toolInfoDescription.Add(new UIText(text));
+		}
+
+		//class WrappedUIText : UIText
+		//{
+
+		//	public WrappedUIText(string text, float textScale = 1, bool large = false) : base(text, textScale, large) { }
+
+		//	public override void Draw(SpriteBatch spriteBatch)
+		//	{
+		//		base.Draw(spriteBatch);
+		//		//float y = 130 + 4 * 30;
+		//		//int num = 180 + (Main.screenWidth - 800) / 2;
+		//		//Vector2 vector = new Vector2(num, y);
+		//		//Vector2 vector = GetInnerDimensions().Position();
+		//		//var vector = _pos;
+		//		var vector = new Vector2(Left.Pixels, Top.Pixels);
+		//		DynamicSpriteFont font = Main.fontMouseText;
+		//		Vector2 vector3 = new Vector2(0.9f);
+		//		Vector2 stringSize = ChatManager.GetStringSize(font, Text, vector3);
+		//		Color baseColor = new Color(255, 255, 255, 255);
+
+		//		ChatManager.DrawColorCodedStringWithShadow(spriteBatch, Main.fontMouseText, Text, vector + stringSize * 0.5f, baseColor, 0f, stringSize * 0.5f, vector3, 140);
+		//	}
+		//}
 	}
 }
