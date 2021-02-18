@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Terraria.ModLoader;
 
 namespace TerrarianWeaponry.DataLoading
 {
@@ -11,6 +12,8 @@ namespace TerrarianWeaponry.DataLoading
 		public static void LoadData()
 		{
 			RegisterMaterials();
+
+			RegisterParts();
 
 			foreach (BaseTool baseTool in GetTools())
 			{
@@ -38,12 +41,12 @@ namespace TerrarianWeaponry.DataLoading
 							textures[i], materialCombo[i].textureInfo.OriginPoint);
 					
 					// Register the item
-					RegisterItem(baseTool, toolName, info, finalTexture, materialCombo.Select(m => m.material));
+					RegisterToolItem(baseTool, toolName, info, finalTexture, materialCombo.Select(m => m.material));
 				}
 			}
 		}
 
-		private static void RegisterItem(BaseTool tool, string itemName, ItemInfo info, Texture2D texture, IEnumerable<BaseMaterial> materials)
+		private static void RegisterToolItem(BaseTool tool, string itemName, ItemInfo info, Texture2D texture, IEnumerable<BaseMaterial> materials)
 		{
 			// Get the type and create an instance of it
 			var toolType = tool.GetType();
@@ -108,6 +111,32 @@ namespace TerrarianWeaponry.DataLoading
 			return (from materialPart in current
 				from combo in combos
 				select combo.Concat(new[] {materialPart}).ToList()).ToList();
+		}
+
+		#endregion
+
+		#region Part Item Registering
+
+		private static void RegisterParts()
+		{
+			foreach (BasePart basePart in GetParts())
+			{
+				foreach ((BaseMaterial material, TextureInfo textureInfo) in basePart.ValidMaterials)
+				{
+					Texture2D texture = TerrarianWeaponry.Instance.GetTexture(textureInfo.Texture);
+
+					string itemName = $"{basePart.PartName}: {material.MaterialName}";
+					ModItem itemToAdd = new NamedItem(texture, itemName);
+
+
+					TerrarianWeaponry.Instance.AddItem("TWP-" + itemName, itemToAdd);
+				}
+			}
+		}
+
+		private static IEnumerable<BasePart> GetParts()
+		{
+			return Utilities.GetTypesExtendingT<BasePart>();
 		}
 
 		#endregion

@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Reflection;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
-using Terraria.ModLoader;
 
 namespace TerrarianWeaponry.DataLoading
 {
-	public abstract class BaseTool : ModItem
+	public abstract class BaseTool : TextureItem
 	{
-		private ItemInfo _info;
-		private readonly Texture2D _texture;
+		private ItemInfo _info; 
 		internal readonly List<BaseMaterial> Materials;
 
 		/// <summary>
@@ -23,10 +20,9 @@ namespace TerrarianWeaponry.DataLoading
 		/// </summary>
 		public abstract string ToolName { get; }
 
-		public BaseTool(ItemInfo info, Texture2D texture, List<BaseMaterial> materials)
+		public BaseTool(ItemInfo info, Texture2D texture, List<BaseMaterial> materials) : base(texture)
 		{
 			_info = info;
-			_texture = texture;
 			Materials = materials;
 		}
 
@@ -40,7 +36,7 @@ namespace TerrarianWeaponry.DataLoading
 
 		public sealed override void SetStaticDefaults()
 		{
-			Main.itemTexture[item.type] = _texture;
+			base.SetStaticDefaults();
 			_info.width = _texture.Width;
 			_info.height = _texture.Height;
 		}
