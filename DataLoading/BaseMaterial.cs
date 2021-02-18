@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Linq;
 
 namespace TerrarianWeaponry.DataLoading
 {
@@ -32,5 +32,32 @@ namespace TerrarianWeaponry.DataLoading
 		/// <param name="info">The item info to modify</param>
 		/// <param name="modifier">The highest modifier of all parts</param>
 		public virtual void ModifyStats(ref ItemInfo info, float modifier) { }
+
+		public override bool Equals(object obj)
+		{
+			if (!(obj is BaseMaterial target))
+				return false;
+
+			if (Modifier != target.Modifier)
+				return false;
+
+			if (MaterialName != target.MaterialName)
+				return false;
+
+			if (!MaterialTypes.SequenceEqual(target.MaterialTypes))
+				return false;
+
+			return true;
+		}
+
+		public static bool operator ==(BaseMaterial a, BaseMaterial b)
+		{
+			return a?.Equals(b) ?? false;
+		}
+
+		public static bool operator !=(BaseMaterial a, BaseMaterial b)
+		{
+			return !(a == b);
+		}
 	}
 }
