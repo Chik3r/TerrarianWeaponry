@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria.ModLoader;
+using TerrarianWeaponry.Utilities;
 
 namespace TerrarianWeaponry.DataLoading
 {
@@ -37,7 +38,7 @@ namespace TerrarianWeaponry.DataLoading
 					Texture2D finalTexture = textures.First();
 
 					for (int i = 1; i < textures.Length; i++)
-						finalTexture = Utilities.MixTexture2D(finalTexture, originPoint, 
+						finalTexture = TextureUtils.MixTexture2D(finalTexture, originPoint, 
 							textures[i], materialCombo[i].textureInfo.OriginPoint);
 					
 					// Register the item
@@ -59,7 +60,7 @@ namespace TerrarianWeaponry.DataLoading
 
 		private static IEnumerable<BaseTool> GetTools()
 		{
-			return Utilities.GetTypesExtendingT<BaseTool>(null, null, null);
+			return MiscUtils.GetTypesExtendingT<BaseTool>(null, null, null);
 		}
 
 		#region Material Item Registering
@@ -75,7 +76,7 @@ namespace TerrarianWeaponry.DataLoading
 
 		private static IEnumerable<BaseMaterial> GetBaseMaterials()
 		{
-			return Utilities.GetTypesExtendingT<BaseMaterial>();
+			return MiscUtils.GetTypesExtendingT<BaseMaterial>();
 		}
 
 		#endregion
@@ -136,7 +137,7 @@ namespace TerrarianWeaponry.DataLoading
 
 		private static IEnumerable<BasePart> GetParts()
 		{
-			return Utilities.GetTypesExtendingT<BasePart>();
+			return MiscUtils.GetTypesExtendingT<BasePart>();
 		}
 
 		#endregion

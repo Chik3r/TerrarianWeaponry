@@ -1,70 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 
-namespace TerrarianWeaponry
+namespace TerrarianWeaponry.Utilities
 {
-	public static class Utilities
+	public static class TextureUtils
 	{
-		#region Color Arrays
-
-		public static Color[] ToColor(this Texture2D texture)
-		{
-			Color[] colors = new Color[texture.Width * texture.Height];
-			texture.GetData(colors);
-			return colors;
-		}
-
-		/// <summary>
-		/// Converts a 1D color array to a 2D color array. The first dimension gets the rows, and the second dimension gets the columns
-		/// </summary>
-		/// <param name="colors">The array to convert</param>
-		/// <param name="width">The width of the array</param>
-		/// <param name="height">The height of the array</param>
-		/// <returns></returns>
-		public static Color[,] To2DColor(this Color[] colors, int width, int height)
-		{
-			Color[,] grid = new Color[height, width];
-			for (int row = 0; row < height; row++)
-			{
-				for (int column = 0; column < width; column++)
-				{
-					grid[row, column] = colors[row * width + column];
-				}
-			}
-
-			return grid;
-		}
-
-		/// <summary>
-		/// Converts a 2D color array to a 1D color array.
-		/// </summary>
-		/// <param name="colors">The array to convert</param>
-		/// <param name="width">The width of the array</param>
-		/// <param name="height">The height of the array</param>
-		/// <returns></returns>
-		public static Color[] To1DColor(this Color[,] colors, int width, int height)
-		{
-			Color[] grid = new Color[width * height];
-			int write = 0;
-			for (int row = 0; row < height; row++)
-			{
-				for (int column = 0; column < width; column++)
-				{
-					grid[write++] = colors[row, column];
-				}
-			}
-
-			return grid;
-		}
-
-		#endregion
-
-		#region Texture Mixing
-
 		/// <summary>
 		/// Gets the max size for an image. <paramref name="firstOrig"/> and <paramref name="firstMaxSize"/> MUST be the bigger sized values
 		/// </summary>
@@ -78,9 +20,9 @@ namespace TerrarianWeaponry
 		{
 			int returnVal;
 			if (firstOrig < firstMaxSize / 2)
-				returnVal = (int) ((firstMaxSize - firstOrig) + secondOrig); // orig at left
+				returnVal = (int)((firstMaxSize - firstOrig) + secondOrig); // orig at left
 			else
-				returnVal = (int) (firstOrig + (secondMaxSize - secondOrig)); // orig at right
+				returnVal = (int)(firstOrig + (secondMaxSize - secondOrig)); // orig at right
 
 			if (clamp)
 				return returnVal < firstMaxSize ? (int)firstMaxSize : returnVal;
@@ -152,20 +94,6 @@ namespace TerrarianWeaponry
 
 			originalTexture.SetData(colorOriginal.To1DColor(originalTexture.Width, originalTexture.Height));
 			return originalTexture;
-		}
-
-		#endregion
-
-		internal static IEnumerable<T> GetTypesExtendingT<T>(params object[] constructorArgs)
-		{
-			// Get all types extending T
-			var baseType = typeof(T);
-			var childTypes = TerrarianWeaponry.Instance.Code.GetTypes()
-				.Where(t => baseType.IsAssignableFrom(t) && !t.IsAbstract);
-
-			// And return an IEnumerable from an instance of the types
-			foreach (Type childType in childTypes)
-				yield return (T)Activator.CreateInstance(childType, constructorArgs);
 		}
 	}
 }
