@@ -16,8 +16,11 @@ namespace TerrarianWeaponry.UI
 		private TabPanel _tabPanel;
 		private UIPanel _toolsPanel;
 		private UIList _toolsList;
-		private ItemSlotWrapper _materialSlot;
-		
+
+		private ItemSlotWrapper _inputSlot;
+		private UITextPanel<string> _createBtn;
+		private ItemSlotWrapper _outputSlot;
+
 		private UIPanel _toolInfoPanel;
 		private UIImage _toolInfoImage;
 		private UIText _toolInfoName;
@@ -70,15 +73,40 @@ namespace TerrarianWeaponry.UI
 
 			AddToolsToList();
 
+			UpdateTools(null);
+
 			#endregion
 
-			_materialSlot = new ItemSlotWrapper
+			#region Create tool assembler
+
+			// Create the input slot and add a callback when the item changes
+			_inputSlot = new ItemSlotWrapper
 			{
-				Top = new StyleDimension(90, 0),
+				Top = new StyleDimension(50, 0),
 				HAlign = 0.5f
 			};
-			//_materialSlot.OnItemChanged += OnItemChanged;
-			_tabPanel.Append(_materialSlot);
+			_inputSlot.OnItemChanged += OnInputChanged;
+			_tabPanel.Append(_inputSlot);
+
+			// Create the "Create" button and add a callback when it is clicked
+			_createBtn = new UITextPanel<string>("Create!")
+			{
+				HAlign = 0.5f,
+				Top = new StyleDimension(5, 0),
+				VAlign = 0.5f
+			};
+			_createBtn.OnClick += OnCreateClicked;
+			_tabPanel.Append(_createBtn);
+
+			// Create the output slot, and make it not possible to insert into it
+			_outputSlot = new ItemSlotWrapper(canInsert: false)
+			{
+				Top = new StyleDimension(160, 0),
+				HAlign = 0.5f
+			};
+			_tabPanel.Append(_outputSlot);
+
+			#endregion
 
 			#region Create panel for part info
 
@@ -140,6 +168,17 @@ namespace TerrarianWeaponry.UI
 			Append(_tabPanel);
 		}
 
+		private void UpdateTools(BaseMaterial material)
+		{
+			foreach (UIElement toolsListItem in _toolsList._items)
+			{
+				if (!(toolsListItem is UITextBasePart textPart))
+					continue;
+
+				textPart.CanBeClicked = textPart.basePart.ValidMaterials.Any(t => t.material == material);
+			}
+		}
+
 		private void AddToolsToList()
 		{
 			foreach (BasePart basePart in Utilities.GetTypesExtendingT<BasePart>())
@@ -155,26 +194,53 @@ namespace TerrarianWeaponry.UI
 		public override void OnDeactivate()
 		{
 			// If the material slot has no item, return
-			if (_materialSlot.Item.IsAir)
+			if (_inputSlot.Item.IsAir)
 				return;
 
 			// Return the item to the player when the UI is closed/changed
-			Main.LocalPlayer.QuickSpawnClonedItem(_materialSlot.Item, _materialSlot.Item.stack);
-			_materialSlot.Item.TurnToAir();
+			Main.LocalPlayer.QuickSpawnClonedItem(_inputSlot.Item, _inputSlot.Item.stack);
+			_inputSlot.Item.TurnToAir();
 		}
 
 		private void OnClickPartText(UIMouseEvent evt)
 		{
+			// If a part text was clicked, update the info
+
 			if (!(evt.Target is UITextBasePart uiText))
 				return;
 
 			UpdateInfo(uiText.basePart);
 		}
 
-		private IEnumerable<string> WrapText(string inputString)
+		private void OnInputChanged(Item item)
 		{
-			int characterLimit = 14;
+			if (!TerrarianWeaponry.Instance.RegisteredMaterials.TryGetValue(item.type, out BaseMaterial material))
+			{
+				// If there's no registered item with the item's type, clear all info
 
+				UpdateTools(null);
+				UpdateInfo(null);
+				
+				return;
+			}
+
+			UpdateInfo(null);
+			UpdateTools(material);
+		}
+
+		private void OnCreateClicked(UIMouseEvent evt, UIElement element)
+		{
+			Main.NewText("Not implemented!");
+		}
+
+		/// <summary>
+		/// Wraps the <see cref="inputString"/> into a <see langword="string"/> <see langword="IEnumerable"/>
+		/// </summary>
+		/// <param name="inputString">The string to split</param>
+		/// <param name="characterLimit">The character limit before making a new line</param>
+		/// <returns>An IEnumerable where every item is a line of the split text</returns>
+		private IEnumerable<string> WrapText(string inputString, int characterLimit = 14)
+		{
 			string[] splitText = inputString.Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries);
 			StringBuilder sb = new StringBuilder();
 
@@ -200,27 +266,34 @@ namespace TerrarianWeaponry.UI
 		{
 			if (part == null)
 			{
+				// If the part is null, use an empty texture
 				var texture = new Texture2D(Main.instance.GraphicsDevice, 1, 1);
 				_toolInfoImage.SetImage(texture);
-				_toolInfoImage.ImageScale = 20f / (texture.Width > texture.Height ? texture.Width : texture.Height);
+				// Calculate the scale so that it fits inside the top 20 pixels
+				_toolInfoImage.ImageScale = 20f / texture.Height;
 
+				// Clear the name and description
 				_toolInfoName.SetText("");
-
 				_toolInfoDescription.Clear();
+
 				return; 
 			}
 
+			// Get the texture of the first valid material
 			TextureInfo textureInfo = part.ValidMaterials.First().textureInfo;
 			Texture2D realTexture = TerrarianWeaponry.Instance.GetTexture(textureInfo.Texture);
 			_toolInfoImage.SetImage(realTexture);
-			_toolInfoImage.ImageScale = 20f / (realTexture.Width > realTexture.Height ? realTexture.Width : realTexture.Height);
+			// Calculate the scale so that it fits inside the top 20 pixels
+			_toolInfoImage.ImageScale = 20f / realTexture.Height;
 			_toolInfoImage.Left = new StyleDimension(0, 0);
 			_toolInfoImage.Top = realTexture.Height > 20 
 				? new StyleDimension(0, 0) 
 				: new StyleDimension(5, 0);
 
+			// Set the tool name
 			_toolInfoName.SetText(part.PartName);
 
+			// Set the description
 			_toolInfoDescription.Clear();
 			var wrappedText = WrapText(part.Description);
 			foreach (string text in wrappedText)
