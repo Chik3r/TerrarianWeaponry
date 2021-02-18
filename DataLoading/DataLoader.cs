@@ -129,7 +129,7 @@ namespace TerrarianWeaponry.DataLoading
 					ModItem itemToAdd = new NamedItem(texture, itemName);
 
 
-					TerrarianWeaponry.Instance.AddItem("TWP-" + itemName, itemToAdd);
+					TerrarianWeaponry.Instance.AddItem(itemName, itemToAdd);
 				}
 			}
 		}
