@@ -6,7 +6,7 @@ namespace TerrarianWeaponry.DataLoading
 	public abstract class BaseMaterial
 	{
 		/// <summary>
-		/// Override this to set the name of the material, ex: a pickaxe would set this to "Pickaxe"
+		/// Override this to set the name of the material, ex: stone would set this to "Stone"
 		/// </summary>
 		public abstract string MaterialName { get; }
 
