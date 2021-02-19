@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
+using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.UI;
 
@@ -58,6 +59,8 @@ namespace TerrarianWeaponry.UI
 
 			isDraggable = !isDraggable;
 			imageBtn.SetImage(ModContent.GetTexture("Terraria/Lock_" + (isDraggable ? 1 : 0)));
+
+			Main.PlaySound(SoundID.Unlock);
 		}
 
 		#region Dragging Code

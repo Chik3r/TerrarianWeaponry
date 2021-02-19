@@ -18,11 +18,11 @@ namespace TerrarianWeaponry.UI
 			_tabPanel = new TabPanel(500, 250,
 				new Tab("Material Info", this),
 				new Tab("Part Assembler", new PartAssemblerState()),
-				new Tab("Tool Assembler", this));
+				new Tab("Tool Assembler", new ToolAssemblerState()));
 
 			_tabPanel.Left.Set(DraggableUIPanel.lastPos.X, 0);
 			_tabPanel.Top.Set(DraggableUIPanel.lastPos.Y, 0);
-			_tabPanel.OnCloseBtnClicked += () => TerrarianWeaponry.Instance.UserInterface.SetState(null);
+			_tabPanel.OnCloseBtnClicked += () => TerrarianWeaponry.Instance.UpdateState(null);
 
 			_materialSlot = new ItemSlotWrapper
 			{

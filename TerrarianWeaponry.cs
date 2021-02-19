@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.UI;
 using TerrarianWeaponry.DataLoading;
@@ -25,7 +26,7 @@ namespace TerrarianWeaponry
 			var _toolForgeUI = new MaterialInfoState();
 			_toolForgeUI.Activate();
 			UserInterface = new UserInterface();
-			UserInterface.SetState(_toolForgeUI);
+			UpdateState(_toolForgeUI);
 		}
 
 		public override void UpdateUI(GameTime gameTime)
@@ -47,6 +48,17 @@ namespace TerrarianWeaponry
 					return true;
 				},
 				InterfaceScaleType.UI));
+		}
+
+		public void UpdateState(UIState newState)
+		{
+			if (newState == null)
+				Main.PlaySound(SoundID.MenuClose);
+
+			if (UserInterface.CurrentState == null && newState != null)
+				Main.PlaySound(SoundID.MenuOpen);
+
+			UserInterface.SetState(newState);
 		}
 	}
 }

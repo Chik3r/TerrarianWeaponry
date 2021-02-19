@@ -8,10 +8,10 @@ namespace TerrarianWeaponry
 	{
 		public override void Action(CommandCaller caller, string input, string[] args)
 		{
-			TerrarianWeaponry.Instance.UserInterface.SetState(null);
+			TerrarianWeaponry.Instance.UpdateState(null);
 			var _toolForgeUI = new MaterialInfoState();
 			_toolForgeUI.Activate();
-			TerrarianWeaponry.Instance.UserInterface.SetState(_toolForgeUI);
+			TerrarianWeaponry.Instance.UpdateState(_toolForgeUI);
 		}
 
 		public override string Command => "ui";

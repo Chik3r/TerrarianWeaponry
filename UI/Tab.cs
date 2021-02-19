@@ -28,7 +28,7 @@ namespace TerrarianWeaponry.UI
 			// When the tab is clicked, change the UIState of the UserInterface, and also change the LastTab
 			TabPanel.LastTab = _targetState;
 
-			TerrarianWeaponry.Instance.UserInterface.SetState(_targetState);
+			TerrarianWeaponry.Instance.UpdateState(_targetState);
 			Main.PlaySound(SoundID.MenuTick);
 		}
 
