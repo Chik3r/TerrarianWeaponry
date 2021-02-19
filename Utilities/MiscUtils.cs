@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Terraria;
 
 namespace TerrarianWeaponry.Utilities
@@ -30,6 +31,35 @@ namespace TerrarianWeaponry.Utilities
 				item.TurnToAir();
 
 			return true;
+		}
+
+		/// <summary>
+		/// Wraps the <paramref name="inputString"/> into a <see langword="string"/> <see langword="IEnumerable"/>
+		/// </summary>
+		/// <param name="inputString">The string to split</param>
+		/// <param name="characterLimit">The character limit before making a new line</param>
+		/// <returns>An IEnumerable where every item is a line of the split text</returns>
+		public static IEnumerable<string> WrapText(string inputString, int characterLimit = 14)
+		{
+			string[] splitText = inputString.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+			StringBuilder sb = new StringBuilder();
+
+			string line = "";
+			foreach (string word in splitText)
+			{
+				if ((line + word).Length > characterLimit)
+				{
+					sb.AppendLine(line);
+					line = "";
+				}
+
+				line += $"{word} ";
+			}
+
+			if (line.Length > 0)
+				sb.AppendLine(line);
+
+			return sb.ToString().Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
 		}
 	}
 }

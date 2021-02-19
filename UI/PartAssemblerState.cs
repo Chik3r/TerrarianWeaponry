@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
@@ -272,35 +269,6 @@ namespace TerrarianWeaponry.UI
 			}
 		}
 
-		/// <summary>
-		/// Wraps the <see cref="inputString"/> into a <see langword="string"/> <see langword="IEnumerable"/>
-		/// </summary>
-		/// <param name="inputString">The string to split</param>
-		/// <param name="characterLimit">The character limit before making a new line</param>
-		/// <returns>An IEnumerable where every item is a line of the split text</returns>
-		private IEnumerable<string> WrapText(string inputString, int characterLimit = 14)
-		{
-			string[] splitText = inputString.Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries);
-			StringBuilder sb = new StringBuilder();
-
-			string line = "";
-			foreach (string word in splitText)
-			{
-				if ((line + word).Length > characterLimit)
-				{
-					sb.AppendLine(line);
-					line = "";
-				}
-
-				line += $"{word} ";
-			}
-
-			if (line.Length > 0)
-				sb.AppendLine(line);
-
-			return sb.ToString().Split(new []{Environment.NewLine}, StringSplitOptions.RemoveEmptyEntries);
-		}
-
 		private void UpdateTools(BaseMaterial material)
 		{
 			foreach (UIElement toolsListItem in _toolsList._items)
@@ -351,7 +319,7 @@ namespace TerrarianWeaponry.UI
 			// Add a line that shows the cost of the part
 			_toolInfoDescription.Add(new UIText($"Cost: {part.MaterialCost}"));
 
-			var wrappedText = WrapText(part.Description);
+			var wrappedText = MiscUtils.WrapText(part.Description);
 			foreach (string text in wrappedText)
 				_toolInfoDescription.Add(new UIText(text));
 		}
