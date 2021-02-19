@@ -16,5 +16,7 @@ namespace TerrarianWeaponry.DataLoading.Data.Parts
 			(new TestMainMaterial(), new TextureInfo("DataLoading/Data/Materials/Textures/TestMainMaterial", new Point(9, 10))),
 			(new TestBothMaterial(), new TextureInfo("DataLoading/Data/Materials/Textures/TestBothMaterial", new Point(20, 10))),
 		};
+
+		public override int MaterialCost => 10;
 	}
 }

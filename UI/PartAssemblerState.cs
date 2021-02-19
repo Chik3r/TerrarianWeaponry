@@ -347,6 +347,10 @@ namespace TerrarianWeaponry.UI
 
 			// Set the description
 			_toolInfoDescription.Clear();
+
+			// Add a line that shows the cost of the part
+			_toolInfoDescription.Add(new UIText($"Cost: {part.MaterialCost}"));
+
 			var wrappedText = WrapText(part.Description);
 			foreach (string text in wrappedText)
 				_toolInfoDescription.Add(new UIText(text));
