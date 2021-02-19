@@ -13,7 +13,7 @@ namespace TerrarianWeaponry.UI
 			UIElement _innerList = (UIElement) _innerListField.GetValue(this);
 			_items.Add(item);
 			_innerList.Append(item);
-			UpdateOrder();
+
 			_innerList.Recalculate();
 			_innerListField.SetValue(this, _innerList);
 		}
