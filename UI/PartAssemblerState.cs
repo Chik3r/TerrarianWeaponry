@@ -5,9 +5,11 @@ using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
+using Terraria.ID;
 using Terraria.ModLoader.UI;
 using Terraria.UI;
 using TerrarianWeaponry.DataLoading;
+using TerrarianWeaponry.Utilities;
 
 namespace TerrarianWeaponry.UI
 {
@@ -25,6 +27,8 @@ namespace TerrarianWeaponry.UI
 		private UIImage _toolInfoImage;
 		private UIText _toolInfoName;
 		private UIList _toolInfoDescription;
+
+		private BasePart _selectedPart;
 
 		public override void OnInitialize()
 		{
@@ -168,20 +172,9 @@ namespace TerrarianWeaponry.UI
 			Append(_tabPanel);
 		}
 
-		private void UpdateTools(BaseMaterial material)
-		{
-			foreach (UIElement toolsListItem in _toolsList._items)
-			{
-				if (!(toolsListItem is UITextBasePart textPart))
-					continue;
-
-				textPart.CanBeClicked = textPart.basePart.ValidMaterials.Any(t => t.material == material);
-			}
-		}
-
 		private void AddToolsToList()
 		{
-			foreach (BasePart basePart in Utilities.GetTypesExtendingT<BasePart>())
+			foreach (BasePart basePart in MiscUtils.GetTypesExtendingT<BasePart>())
 			{
 				_toolsList.Add(new UITextBasePart(basePart.PartName)
 				{
@@ -193,13 +186,19 @@ namespace TerrarianWeaponry.UI
 
 		public override void OnDeactivate()
 		{
+			DeactivateSlot(_inputSlot);
+			DeactivateSlot(_outputSlot);
+		}
+
+		private void DeactivateSlot(ItemSlotWrapper slot)
+		{
 			// If the material slot has no item, return
-			if (_inputSlot.Item.IsAir)
+			if (slot.Item.IsAir)
 				return;
 
 			// Return the item to the player when the UI is closed/changed
-			Main.LocalPlayer.QuickSpawnClonedItem(_inputSlot.Item, _inputSlot.Item.stack);
-			_inputSlot.Item.TurnToAir();
+			Main.LocalPlayer.QuickSpawnClonedItem(slot.Item, slot.Item.stack);
+			slot.Item.TurnToAir();
 		}
 
 		private void OnClickPartText(UIMouseEvent evt)
@@ -230,7 +229,47 @@ namespace TerrarianWeaponry.UI
 
 		private void OnCreateClicked(UIMouseEvent evt, UIElement element)
 		{
-			Main.NewText("Not implemented!");
+			// If there's no selected part, return
+			if (_selectedPart == null)
+				return;
+
+			// If the output slot already has an item, return
+			if (!_outputSlot.Item.IsAir)
+				return;
+
+			// If the item doesn't create a material, return
+			if (!TerrarianWeaponry.Instance.RegisteredMaterials.TryGetValue(_inputSlot.Item.type, out BaseMaterial material))
+				return;
+
+			// If all of the valid materials of the selected part are not equal to the current material, return
+			if (_selectedPart.ValidMaterials.All(t => t.material != material))
+				return;
+
+			// If the input slot can't be consumed, return
+			if (!_inputSlot.Item.SafeConsume(_selectedPart.MaterialCost))
+				return;
+
+			// Get the item ID from the internal name
+			var itemId = TerrarianWeaponry.Instance.ItemType($"{_selectedPart.PartName}: {material.MaterialName}");
+			if (itemId == 0)
+				return;
+
+			// Create the final item and set the defaults to the item id
+			var finalItem = new Item();
+			finalItem.SetDefaults(itemId);
+
+			// Set the output slot
+			_outputSlot.Item = finalItem;
+
+			// Play the reforge sound
+			Main.PlaySound(SoundID.Item, Style: 37);
+
+			// If the input slot is empty at the end, clear the info and tools
+			if (_inputSlot.Item.IsAir || _inputSlot.Item.stack == 0)
+			{
+				UpdateInfo(null);
+				UpdateTools(null);
+			}
 		}
 
 		/// <summary>
@@ -262,8 +301,21 @@ namespace TerrarianWeaponry.UI
 			return sb.ToString().Split(new []{Environment.NewLine}, StringSplitOptions.RemoveEmptyEntries);
 		}
 
+		private void UpdateTools(BaseMaterial material)
+		{
+			foreach (UIElement toolsListItem in _toolsList._items)
+			{
+				if (!(toolsListItem is UITextBasePart textPart))
+					continue;
+
+				textPart.CanBeClicked = textPart.basePart.ValidMaterials.Any(t => t.material == material);
+			}
+		}
+
 		private void UpdateInfo(BasePart part)
 		{
+			_selectedPart = part;
+
 			if (part == null)
 			{
 				// If the part is null, use an empty texture
