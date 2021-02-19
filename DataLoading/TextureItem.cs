@@ -8,6 +8,8 @@ namespace TerrarianWeaponry.DataLoading
 	{
 		public override string Texture => "TerrarianWeaponry/MissingItem";
 
+		public override bool CloneNewInstances => true;
+
 		protected readonly Texture2D _texture;
 
 		public TextureItem(Texture2D texture) => _texture = texture;
