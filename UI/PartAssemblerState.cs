@@ -13,17 +13,17 @@ namespace TerrarianWeaponry.UI
 	internal class PartAssemblerState : UIState
 	{
 		private TabPanel _tabPanel;
-		private UIPanel _toolsPanel;
-		private UIList _toolsList;
+		private UIPanel _partsPanel;
+		private UIList _partsList;
 
 		private ItemSlotWrapper _inputSlot;
 		private UITextPanel<string> _createBtn;
 		private ItemSlotWrapper _outputSlot;
 
-		private UIPanel _toolInfoPanel;
-		private UIImage _toolInfoImage;
-		private UIText _toolInfoName;
-		private UIList _toolInfoDescription;
+		private UIPanel _partInfoPanel;
+		private UIImage _partInfoImage;
+		private UIText _partInfoName;
+		private UIList _partInfoDescription;
 
 		private BasePart _selectedPart;
 
@@ -41,25 +41,25 @@ namespace TerrarianWeaponry.UI
 
 			#region Create panel containing tools
 
-			_toolsPanel = new UIPanel
+			_partsPanel = new UIPanel
 			{
 				Left = new StyleDimension(20, 0),
 				Top = new StyleDimension(40, 0),
 				Width = new StyleDimension(150, 0),
 				Height = new StyleDimension(190, 0)
 			};
-			_toolsPanel.SetPadding(0);
-			_tabPanel.Append(_toolsPanel);
+			_partsPanel.SetPadding(0);
+			_tabPanel.Append(_partsPanel);
 
 			// Create a list
-			_toolsList = new UIList
+			_partsList = new UIList
 			{
 				Width = new StyleDimension(125, 0),
 				Height = new StyleDimension(0, 1),
 				Left = new StyleDimension(25, 0),
 				Top = new StyleDimension(5, 0)
 			};
-			_toolsPanel.Append(_toolsList);
+			_partsPanel.Append(_partsList);
 
 			// And add a scrollbar
 			UIScrollbar toolScrollbar = new UIScrollbar
@@ -69,16 +69,16 @@ namespace TerrarianWeaponry.UI
 				Width = new StyleDimension(20, 0),
 				Left = new StyleDimension(0, 0)
 			}.WithView(50, 250);
-			_toolsPanel.Append(toolScrollbar);
-			_toolsList.SetScrollbar(toolScrollbar);
+			_partsPanel.Append(toolScrollbar);
+			_partsList.SetScrollbar(toolScrollbar);
 
-			AddToolsToList();
+			AddPartsToList();
 
-			UpdateTools(null);
+			UpdateParts(null);
 
 			#endregion
 
-			#region Create tool assembler
+			#region Create part assembler
 
 			// Create the input slot and add a callback when the item changes
 			_inputSlot = new ItemSlotWrapper
@@ -111,69 +111,69 @@ namespace TerrarianWeaponry.UI
 
 			#region Create panel for part info
 
-			_toolInfoPanel = new UIPanel
+			_partInfoPanel = new UIPanel
 			{
 				Left = new StyleDimension(_tabPanel.Width.Pixels - 150 - 20, 0),
 				Top = new StyleDimension(40, 0),
 				Width = new StyleDimension(150, 0),
 				Height = new StyleDimension(190, 0)
 			};
-			_toolInfoPanel.SetPadding(0);
-			_tabPanel.Append(_toolInfoPanel);
+			_partInfoPanel.SetPadding(0);
+			_tabPanel.Append(_partInfoPanel);
 
 			// Create an image for the info with a default empty image
 			var texture = new Texture2D(Main.instance.GraphicsDevice, 1, 1);
-			_toolInfoImage = new UIImage(texture)
+			_partInfoImage = new UIImage(texture)
 			{
 				HAlign = .5f, 
 				ImageScale = 20f / (texture.Width > texture.Height ? texture.Width : texture.Height),
 			};
-			_toolInfoImage.SetImage(texture);
-			_toolInfoImage.Width = new StyleDimension(20, 0);
-			_toolInfoImage.Height = new StyleDimension(20, 0);
-			_toolInfoImage.Left = new StyleDimension(-10, 0);
-			_toolInfoPanel.Append(_toolInfoImage);
+			_partInfoImage.SetImage(texture);
+			_partInfoImage.Width = new StyleDimension(20, 0);
+			_partInfoImage.Height = new StyleDimension(20, 0);
+			_partInfoImage.Left = new StyleDimension(-10, 0);
+			_partInfoPanel.Append(_partInfoImage);
 
 			// Add a UIText for the name of the part
-			_toolInfoName = new UIText("")
+			_partInfoName = new UIText("")
 			{
 				Top = new StyleDimension(35, 0),
 				HAlign = 0.5f,
 				Left = new StyleDimension(-5, 0)
 			};
-			_toolInfoPanel.Append(_toolInfoName);
+			_partInfoPanel.Append(_partInfoName);
 
 			// Add a UIList for the description of the part, each line is a new element in the list
-			_toolInfoDescription = new UnsortedList
+			_partInfoDescription = new UnsortedList
 			{
 				Top = new StyleDimension(60, 0),
 				Left = new StyleDimension(8, 0),
-				Width = new StyleDimension(_toolInfoPanel.Width.Pixels - 20, 0),
+				Width = new StyleDimension(_partInfoPanel.Width.Pixels - 20, 0),
 				Height = new StyleDimension(125, 0)
 			};
-			_toolInfoPanel.Append(_toolInfoDescription);
+			_partInfoPanel.Append(_partInfoDescription);
 
 			UIScrollbar descriptionScrollbar = new UIScrollbar
 			{
-				Height = new StyleDimension(_toolInfoPanel.Height.Pixels - 10, 0),
+				Height = new StyleDimension(_partInfoPanel.Height.Pixels - 10, 0),
 				Top = new StyleDimension(5, 0),
 				Width = new StyleDimension(20, 0),
-				Left = new StyleDimension(_toolInfoPanel.Width.Pixels - 20, 0)
+				Left = new StyleDimension(_partInfoPanel.Width.Pixels - 20, 0)
 				//HAlign = 1f
 			}.WithView(20, 130);
-			_toolInfoPanel.Append(descriptionScrollbar);
-			_toolInfoDescription.SetScrollbar(descriptionScrollbar);
+			_partInfoPanel.Append(descriptionScrollbar);
+			_partInfoDescription.SetScrollbar(descriptionScrollbar);
 			
 			#endregion
 
 			Append(_tabPanel);
 		}
 
-		private void AddToolsToList()
+		private void AddPartsToList()
 		{
 			foreach (BasePart basePart in MiscUtils.GetTypesExtendingT<BasePart>())
 			{
-				_toolsList.Add(new UITextBasePart(basePart.PartName)
+				_partsList.Add(new UITextBasePart(basePart.PartName)
 				{
 					basePart = basePart,
 					OnClicked = OnClickPartText
@@ -214,14 +214,14 @@ namespace TerrarianWeaponry.UI
 			{
 				// If there's no registered item with the item's type, clear all info
 
-				UpdateTools(null);
+				UpdateParts(null);
 				UpdateInfo(null);
 				
 				return;
 			}
 
 			UpdateInfo(null);
-			UpdateTools(material);
+			UpdateParts(material);
 		}
 
 		private void OnCreateClicked(UIMouseEvent evt, UIElement element)
@@ -265,13 +265,13 @@ namespace TerrarianWeaponry.UI
 			if (_inputSlot.Item.IsAir || _inputSlot.Item.stack == 0)
 			{
 				UpdateInfo(null);
-				UpdateTools(null);
+				UpdateParts(null);
 			}
 		}
 
-		private void UpdateTools(BaseMaterial material)
+		private void UpdateParts(BaseMaterial material)
 		{
-			foreach (UIElement toolsListItem in _toolsList._items)
+			foreach (UIElement toolsListItem in _partsList._items)
 			{
 				if (!(toolsListItem is UITextBasePart textPart))
 					continue;
@@ -288,13 +288,13 @@ namespace TerrarianWeaponry.UI
 			{
 				// If the part is null, use an empty texture
 				var texture = new Texture2D(Main.instance.GraphicsDevice, 1, 1);
-				_toolInfoImage.SetImage(texture);
+				_partInfoImage.SetImage(texture);
 				// Calculate the scale so that it fits inside the top 20 pixels
-				_toolInfoImage.ImageScale = 20f / texture.Height;
+				_partInfoImage.ImageScale = 20f / texture.Height;
 
 				// Clear the name and description
-				_toolInfoName.SetText("");
-				_toolInfoDescription.Clear();
+				_partInfoName.SetText("");
+				_partInfoDescription.Clear();
 
 				return; 
 			}
@@ -302,26 +302,26 @@ namespace TerrarianWeaponry.UI
 			// Get the texture of the first valid material
 			TextureInfo textureInfo = part.ValidMaterials.First().textureInfo;
 			Texture2D realTexture = TerrarianWeaponry.Instance.GetTexture(textureInfo.Texture);
-			_toolInfoImage.SetImage(realTexture);
+			_partInfoImage.SetImage(realTexture);
 			// Calculate the scale so that it fits inside the top 20 pixels
-			_toolInfoImage.ImageScale = 20f / realTexture.Height;
-			_toolInfoImage.Left = new StyleDimension(0, 0);
-			_toolInfoImage.Top = realTexture.Height > 20 
+			_partInfoImage.ImageScale = 20f / realTexture.Height;
+			_partInfoImage.Left = new StyleDimension(0, 0);
+			_partInfoImage.Top = realTexture.Height > 20 
 				? new StyleDimension(0, 0) 
 				: new StyleDimension(5, 0);
 
 			// Set the tool name
-			_toolInfoName.SetText(part.PartName);
+			_partInfoName.SetText(part.PartName);
 
 			// Set the description
-			_toolInfoDescription.Clear();
+			_partInfoDescription.Clear();
 
 			// Add a line that shows the cost of the part
-			_toolInfoDescription.Add(new UIText($"Cost: {part.MaterialCost}"));
+			_partInfoDescription.Add(new UIText($"Cost: {part.MaterialCost}"));
 
 			var wrappedText = MiscUtils.WrapText(part.Description);
 			foreach (string text in wrappedText)
-				_toolInfoDescription.Add(new UIText(text));
+				_partInfoDescription.Add(new UIText(text));
 		}
 	}
 }
