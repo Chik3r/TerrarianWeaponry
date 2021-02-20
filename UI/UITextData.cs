@@ -2,13 +2,12 @@
 using Microsoft.Xna.Framework;
 using Terraria.GameContent.UI.Elements;
 using Terraria.UI;
-using TerrarianWeaponry.DataLoading;
 
 namespace TerrarianWeaponry.UI
 {
-	class UITextBasePart : UIText
+	class UITextData<T> : UIText
 	{
-		internal BasePart basePart;
+		internal T extraData;
 		internal Action<UIMouseEvent> OnClicked;
 		private bool _canBeClicked = true;
 
@@ -18,14 +17,13 @@ namespace TerrarianWeaponry.UI
 			set
 			{
 				_canBeClicked = value;
-				if (value)
-					TextColor = Color.White;
-				else
-					TextColor = Color.Gray;
+				TextColor = value 
+					? Color.White 
+					: Color.Gray;
 			}
 		}
 
-		public UITextBasePart(string text, float textScale = 1, bool large = false) : base(text, textScale, large) { }
+		public UITextData(string text, float textScale = 1, bool large = false) : base(text, textScale, large) { }
 
 		public override void Click(UIMouseEvent evt)
 		{

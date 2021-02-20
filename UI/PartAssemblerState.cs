@@ -173,9 +173,9 @@ namespace TerrarianWeaponry.UI
 		{
 			foreach (BasePart basePart in MiscUtils.GetTypesExtendingT<BasePart>())
 			{
-				_partsList.Add(new UITextBasePart(basePart.PartName)
+				_partsList.Add(new UITextData<BasePart>(basePart.PartName)
 				{
-					basePart = basePart,
+					extraData = basePart,
 					OnClicked = OnClickPartText
 				});
 			}
@@ -202,10 +202,10 @@ namespace TerrarianWeaponry.UI
 		{
 			// If a part text was clicked, update the info
 
-			if (!(evt.Target is UITextBasePart uiText))
+			if (!(evt.Target is UITextData<BasePart> uiText))
 				return;
 
-			UpdateInfo(uiText.basePart);
+			UpdateInfo(uiText.extraData);
 		}
 
 		private void OnInputChanged(Item item)
@@ -273,10 +273,10 @@ namespace TerrarianWeaponry.UI
 		{
 			foreach (UIElement toolsListItem in _partsList._items)
 			{
-				if (!(toolsListItem is UITextBasePart textPart))
+				if (!(toolsListItem is UITextData<BasePart> textPart))
 					continue;
 
-				textPart.CanBeClicked = textPart.basePart.ValidMaterials.Any(t => t.material == material);
+				textPart.CanBeClicked = textPart.extraData.ValidMaterials.Any(t => t.material == material);
 			}
 		}
 
