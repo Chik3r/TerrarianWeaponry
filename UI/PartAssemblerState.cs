@@ -3,14 +3,13 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
-using Terraria.ModLoader.UI;
 using Terraria.UI;
 using TerrarianWeaponry.DataLoading;
 using TerrarianWeaponry.Utilities;
 
 namespace TerrarianWeaponry.UI
 {
-	internal class PartAssemblerState : UIState
+	internal partial class PartAssemblerState : UIState
 	{
 		private TabPanel _tabPanel;
 		private UIPanel _partsPanel;
@@ -29,144 +28,17 @@ namespace TerrarianWeaponry.UI
 
 		public override void OnInitialize()
 		{
-			// Create a tab panel
-			_tabPanel = new TabPanel(500, 250,
-				new Tab("Material Info", new MaterialInfoState()),
-				new Tab("Part Assembler", this),
-				new Tab("Tool Assembler", new ToolAssemblerState()));
+			// Create the main panel
+			CreateMainPanel();
 
-			_tabPanel.Left.Set(DraggableUIPanel.lastPos.X, 0);
-			_tabPanel.Top.Set(DraggableUIPanel.lastPos.Y, 0);
-			_tabPanel.OnCloseBtnClicked += () => TerrarianWeaponry.Instance.UpdateState(null);
+			// Create panel containing a list of parts
+			CreatePartListPanel();
 
-			#region Create panel containing tools
+			// Create the part assembler
+			CreatePartAssembler();
 
-			_partsPanel = new UIPanel
-			{
-				Left = new StyleDimension(20, 0),
-				Top = new StyleDimension(40, 0),
-				Width = new StyleDimension(150, 0),
-				Height = new StyleDimension(190, 0)
-			};
-			_partsPanel.SetPadding(0);
-			_tabPanel.Append(_partsPanel);
-
-			// Create a list
-			_partsList = new UIList
-			{
-				Width = new StyleDimension(125, 0),
-				Height = new StyleDimension(0, 1),
-				Left = new StyleDimension(25, 0),
-				Top = new StyleDimension(5, 0)
-			};
-			_partsPanel.Append(_partsList);
-
-			// And add a scrollbar
-			UIScrollbar toolScrollbar = new UIScrollbar
-			{
-				Height = new StyleDimension(180, 0),
-				Top = new StyleDimension(5, 0),
-				Width = new StyleDimension(20, 0),
-				Left = new StyleDimension(0, 0)
-			}.WithView(50, 250);
-			_partsPanel.Append(toolScrollbar);
-			_partsList.SetScrollbar(toolScrollbar);
-
-			AddPartsToList();
-
-			UpdateParts(null);
-
-			#endregion
-
-			#region Create part assembler
-
-			// Create the input slot and add a callback when the item changes
-			_inputSlot = new ItemSlotWrapper
-			{
-				Top = new StyleDimension(50, 0),
-				HAlign = 0.5f
-			};
-			_inputSlot.OnItemChanged += OnInputChanged;
-			_tabPanel.Append(_inputSlot);
-
-			// Create the "Create" button and add a callback when it is clicked
-			_createBtn = new UITextPanel<string>("Create!")
-			{
-				HAlign = 0.5f,
-				Top = new StyleDimension(5, 0),
-				VAlign = 0.5f
-			};
-			_createBtn.OnClick += OnCreateClicked;
-			_tabPanel.Append(_createBtn);
-
-			// Create the output slot, and make it not possible to insert into it
-			_outputSlot = new ItemSlotWrapper(canInsert: false)
-			{
-				Top = new StyleDimension(160, 0),
-				HAlign = 0.5f
-			};
-			_tabPanel.Append(_outputSlot);
-
-			#endregion
-
-			#region Create panel for part info
-
-			_partInfoPanel = new UIPanel
-			{
-				Left = new StyleDimension(_tabPanel.Width.Pixels - 150 - 20, 0),
-				Top = new StyleDimension(40, 0),
-				Width = new StyleDimension(150, 0),
-				Height = new StyleDimension(190, 0)
-			};
-			_partInfoPanel.SetPadding(0);
-			_tabPanel.Append(_partInfoPanel);
-
-			// Create an image for the info with a default empty image
-			var texture = new Texture2D(Main.instance.GraphicsDevice, 1, 1);
-			_partInfoImage = new UIImage(texture)
-			{
-				HAlign = .5f, 
-				ImageScale = 20f / (texture.Width > texture.Height ? texture.Width : texture.Height),
-			};
-			_partInfoImage.SetImage(texture);
-			_partInfoImage.Width = new StyleDimension(20, 0);
-			_partInfoImage.Height = new StyleDimension(20, 0);
-			_partInfoImage.Left = new StyleDimension(-10, 0);
-			_partInfoPanel.Append(_partInfoImage);
-
-			// Add a UIText for the name of the part
-			_partInfoName = new UIText("")
-			{
-				Top = new StyleDimension(35, 0),
-				HAlign = 0.5f,
-				Left = new StyleDimension(-5, 0)
-			};
-			_partInfoPanel.Append(_partInfoName);
-
-			// Add a UIList for the description of the part, each line is a new element in the list
-			_partInfoDescription = new UnsortedList
-			{
-				Top = new StyleDimension(60, 0),
-				Left = new StyleDimension(8, 0),
-				Width = new StyleDimension(_partInfoPanel.Width.Pixels - 20, 0),
-				Height = new StyleDimension(125, 0)
-			};
-			_partInfoPanel.Append(_partInfoDescription);
-
-			UIScrollbar descriptionScrollbar = new UIScrollbar
-			{
-				Height = new StyleDimension(_partInfoPanel.Height.Pixels - 10, 0),
-				Top = new StyleDimension(5, 0),
-				Width = new StyleDimension(20, 0),
-				Left = new StyleDimension(_partInfoPanel.Width.Pixels - 20, 0)
-				//HAlign = 1f
-			}.WithView(20, 130);
-			_partInfoPanel.Append(descriptionScrollbar);
-			_partInfoDescription.SetScrollbar(descriptionScrollbar);
-			
-			#endregion
-
-			Append(_tabPanel);
+			// Create panel for the part info
+			CreatePartInfoPanel();
 		}
 
 		private void AddPartsToList()
