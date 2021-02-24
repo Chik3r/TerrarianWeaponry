@@ -66,6 +66,9 @@ namespace TerrarianWeaponry.Utilities
 
 		public static Texture2D MixTexture2D(Texture2D originalTexture, Point originalPoint, Texture2D mergeTexture, Point mergePoint)
 		{
+			CheckOriginInside(originalTexture, originalPoint);
+			CheckOriginInside(mergeTexture, mergePoint);
+
 			Point maxSize = GetMaxSize(originalPoint, originalTexture, mergePoint, mergeTexture);
 			int xSize = maxSize.X;
 			int ySize = maxSize.Y;
@@ -94,6 +97,15 @@ namespace TerrarianWeaponry.Utilities
 
 			originalTexture.SetData(colorOriginal.To1DColor(originalTexture.Width, originalTexture.Height));
 			return originalTexture;
+		}
+
+		private static void CheckOriginInside(Texture2D texture, Point point)
+		{
+			if (point.X < 0 || point.X >= texture.Width ||
+			    point.Y < 0 || point.Y >= texture.Height)
+				throw new ArgumentException("The original point is out of bounds\n" +
+				                            $"Point: {point}\n" +
+				                            $"Texture: width: {texture.Width} - height: {texture.Height}");
 		}
 	}
 }
